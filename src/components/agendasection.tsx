@@ -41,7 +41,7 @@ export default function AgendaSection() {
             <div className="p-6">
                 <div className="rounded-lg overflow-hidden shadow-xl">
                     <img
-                        src="/api/placeholder/800/500"
+                        src="/seminario-cultura.jpg"
                         alt="Seminário Cultura em Crise na USP"
                         className="w-full h-auto"
                     />
