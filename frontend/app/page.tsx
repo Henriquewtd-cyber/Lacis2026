@@ -3,227 +3,260 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
-// ─── Image sets – each set shows 4 images simultaneously in a 2×2 grid ───
-// Replace src values with your actual paths inside /public/images/
-const imageSets: { src: string; alt: string }[][] = [
+// ─── 12 images: 4 cells × 3 each ───
+// Replace src values with paths inside /public/
+const cellImages = [
+  // Cell 0 – top-left
   [
     { src: "/img1.png", alt: "Imagem 1A" },
-    { src: "/img2.png", alt: "Imagem 1B" },
-    { src: "/img3.png", alt: "Imagem 1C" },
-    { src: "/img4.png", alt: "Imagem 1D" },
+    { src: "/img5.png", alt: "Imagem 1B" },
+    { src: "/img1c.png", alt: "Imagem 1C" },
   ],
+  // Cell 1 – top-right
   [
-    { src: "/images/set2-a.jpg", alt: "Imagem 2A" },
-    { src: "/images/set2-b.jpg", alt: "Imagem 2B" },
-    { src: "/images/set2-c.jpg", alt: "Imagem 2C" },
-    { src: "/images/set2-d.jpg", alt: "Imagem 2D" },
+    { src: "/img2.png", alt: "Imagem 2A" },
+    { src: "/img6.png", alt: "Imagem 2B" },
+    { src: "/img2c.png", alt: "Imagem 2C" },
   ],
+  // Cell 2 – bottom-left
   [
-    { src: "/images/set3-a.jpg", alt: "Imagem 3A" },
-    { src: "/images/set3-b.jpg", alt: "Imagem 3B" },
-    { src: "/images/set3-c.jpg", alt: "Imagem 3C" },
-    { src: "/images/set3-d.jpg", alt: "Imagem 3D" },
+    { src: "/img3.png", alt: "Imagem 3A" },
+    { src: "/img7.jpg", alt: "Imagem 3B" },
+    { src: "/img3c.png", alt: "Imagem 3C" },
+  ],
+  // Cell 3 – bottom-right
+  [
+    { src: "/img4.png", alt: "Imagem 4A" },
+    { src: "/img8.jpg", alt: "Imagem 4B" },
+    { src: "/img4c.png", alt: "Imagem 4C" },
   ],
 ];
 
-const cellFallbacks = ["#1a3a3a", "#2a3a1a", "#1a3020", "#1a2a3a"];
+// Staggered intervals so cells rotate at different times
+const CELL_INTERVALS = [5000, 6500, 4500, 7000];
+const FADE_MS = 500;
+const FALLBACKS = ["#1a3a3a", "#2a3a1a", "#1a3020", "#1a2a3a"];
 
-export default function Home() {
-  const [setIndex, setSetIndex] = useState(0);
+function NavTag({ label, href }: { label: string; href: string }) {
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <a
+      href={href}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "inline-block",
+
+        background: hovered ? "#fff" : "#000",
+        color: hovered ? "#000" : "#fff",
+
+        fontWeight: 400,
+        textTransform: "uppercase",
+
+        fontSize: "2rem",
+        lineHeight: 1,
+
+        padding: "0.2rem 0.8rem",
+
+        letterSpacing: "-0.03em",
+
+        textDecoration: "none",
+
+        transition: "all 0.15s ease",
+
+        whiteSpace: "nowrap",
+
+        fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif",
+
+        boxShadow: hovered
+          ? "0 0 25px rgba(255,255,255,0.25)"
+          : "none",
+      }}
+    >
+      {label}
+    </a>
+  );
+}
+
+function RotatingCell({ images, interval, fallback }: { images: Array<{ src: string; alt: string }>; interval: number; fallback: string }) {
+  const [index, setIndex] = useState(0);
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     const id = setInterval(() => {
       setVisible(false);
       setTimeout(() => {
-        setSetIndex((prev) => (prev + 1) % imageSets.length);
+        setIndex((prev) => (prev + 1) % images.length);
         setVisible(true);
-      }, 500);
-    }, 5000);
+      }, FADE_MS);
+    }, interval);
     return () => clearInterval(id);
-  }, []);
-
-  const currentSet = imageSets[setIndex];
+  }, [images.length, interval]);
 
   return (
-    <main
-      className="h-screen w-screen overflow-hidden grid grid-cols-3"
+    <div
       style={{
-        fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif",
+        position: "relative",
+        overflow: "hidden",
+        backgroundImage: `url(${images[index].src})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundColor: fallback,
+        opacity: visible ? 1 : 0,
+        transition: `opacity ${FADE_MS * 2}ms linear`,
+      }}
+      aria-label={images[index].alt}
+    />
+  );
+}
+
+export default function Home() {
+  return (
+    <main
+      style={{
+        height: "100vh",
+        width: "100vw",
+        overflow: "hidden",
         display: "grid",
         gridTemplateColumns: "1fr 2fr 1fr",
+        fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif",
       }}
     >
       {/* ══════════ LEFT – navy ══════════ */}
       <aside
-        className="flex flex-col items-center justify-around py-10 px-8 border-r border-white/10 overflow-hidden gap-50"
-        style={{ background: "#0b1145" }}
+        style={{
+          background: "#0b1145",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "space-around",
+          padding: "2.5rem 2rem",
+          borderRight: "1px solid rgba(255,255,255,0.1)",
+          overflow: "hidden",
+          gap: "4rem",
+        }}
       >
-        {/* Top block */}
-        <div className="w-full flex flex-col items-center gap-6">
-          <Image src="/brasao_usp1.png" alt="USP logo" width={50} height={50} />
+        <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" }}>
+          {/* USP crest placeholder */}
+          <Image src="/brasao_usp1.png" alt="Brasão USP" width={60} height={80} />
 
-          <p className="text-[12px] leading-relaxed text-white/75 text-center">
-            <strong className="text-white font-bold">USP</strong> Universidade de São Paulo
-            <br />
-            <strong className="text-white font-bold">ECA</strong> Escola de Comunicações e Artes
-            <br />
-            <strong className="text-white font-bold">CBD</strong> Departamento de Informação e Cultura
+          <p style={{ fontSize: 20, lineHeight: 1.6, color: "rgba(255,255,255,0.75)", textAlign: "center", margin: 0 }}>
+            <strong style={{ color: "#fff", fontWeight: 700 }}>USP</strong> Universidade de São Paulo<br />
+            <strong style={{ color: "#fff", fontWeight: 700 }}>ECA</strong> Escola de Comunicações e Artes<br />
+            <strong style={{ color: "#fff", fontWeight: 700 }}>CBD</strong> Departamento de Informação e Cultura
           </p>
 
-          <Image
-            src="/logo_semfundo.png"
-            alt="LACIS logo"
-            width={300}
-            height={40}
-            className="object-contain"
-          />
+          {/* LACIS logo placeholder */}
+          <Image src="/logo_semfundo.png" alt="LACIS logo" width={300} height={300} />
         </div>
 
-        {/* Bottom block */}
-        <div className="text-center mb-0.5">
-          <p className="text-[12px] text-white/80 leading-snug">
-            <strong className="text-white">LACIS</strong> Laboratório de Cultura,
-            <br />
+        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+          <p style={{ fontSize: 22, color: "rgba(255,255,255,0.8)", lineHeight: 1.5, margin: "0 0 0.5rem" }}>
+            <strong style={{ color: "#fff" }}>LACIS</strong> Laboratório de Cultura,<br />
             Informação e Sociedade
           </p>
-          <a
-            href="mailto:lacis@usp.br"
-            className="mt-2 block text-[12px] text-[#7ec8f4] hover:text-white transition-colors"
-          >
+          <a href="mailto:lacis@usp.br" style={{ display: "block", fontSize: 22, color: "#7ec8f4", textDecoration: "none" }}>
             lacis@usp.br
           </a>
         </div>
       </aside>
 
-      {/* ══════════ CENTER – 2×2 tall image grid + nav tags ══════════ */}
-      <section className="relative overflow-hidden" style={{ background: "#000" }}>
+      {/* ══════════ CENTER – 2×2 rotating image grid + floating nav ══════════ */}
+      <section style={{ position: "relative", background: "#000" }}>
 
-        {/* 2×2 grid filling the full column height */}
+        {/* 2×2 grid fills the whole column */}
         <div
-          className="absolute inset-0"
           style={{
+            position: "absolute", inset: 0,
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
             gridTemplateRows: "1fr 1fr",
-            opacity: visible ? 1 : 0,
-            transition: "opacity 0.5s ease-in-out",
           }}
         >
-          {currentSet.map((img, i) => (
-            <div key={i} className="relative overflow-hidden">
-              {/*
-                Replace with Next.js <Image>:
-                <Image src={img.src} alt={img.alt} fill style={{ objectFit: "cover" }} />
-              */}
-              <div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{
-                  backgroundImage: `url(${img.src})`,
-                  backgroundColor: cellFallbacks[i],
-                }}
-              />
-            </div>
-          ))}
+          <RotatingCell images={cellImages[0]} interval={CELL_INTERVALS[0]} fallback={FALLBACKS[0]} />
+          <RotatingCell images={cellImages[1]} interval={CELL_INTERVALS[1]} fallback={FALLBACKS[1]} />
+          <RotatingCell images={cellImages[2]} interval={CELL_INTERVALS[2]} fallback={FALLBACKS[2]} />
+          <RotatingCell images={cellImages[3]} interval={CELL_INTERVALS[3]} fallback={FALLBACKS[3]} />
         </div>
 
-        {/* Floating nav tags */}
-        <nav className="absolute inset-0 pointer-events-none z-10">
-          {/* Top-right quadrant: CURSOS × 2 + AGENDA */}
-          <div className="absolute top-0 left-1/2 w-1/2 flex flex-col items-start pt-3 pl-2 gap-2 pointer-events-none">
-            {[
-              { label: "CURSOS DE EXTENSÃO", href: "#cursos" },
-              { label: "CURSOS DE EXTENSÃO", href: "#cursos2" },
-              { label: "AGENDA", href: "#agenda" },
-            ].map((t) => (
-              <a
-                key={t.href}
-                href={t.href}
-                className="pointer-events-auto inline-block bg-black text-white
-                           font-bold uppercase text-[13px] px-3 py-[5px]
-                           hover:bg-white hover:text-black transition-colors duration-150"
-                style={{ letterSpacing: "0.07em" }}
-              >
-                {t.label}
-              </a>
-            ))}
-          </div>
+        {/* Nav overlay – z-index 20, floats above grid, pointer-events on tags only */}
+        {/* NAV CENTRAL */}
+        <nav
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 20,
 
-          {/* Bottom-left quadrant: SOBRE / TEXTOS / PESQUISAS */}
-          <div className="absolute bottom-10 left-2 flex flex-col items-start gap-2 pointer-events-none">
-            {[
-              { label: "SOBRE O LACIS", href: "#sobre" },
-              { label: "TEXTOS", href: "#textos" },
-              { label: "PESQUISAS", href: "#pesquisas" },
-            ].map((t) => (
-              <a
-                key={t.href}
-                href={t.href}
-                className="pointer-events-auto inline-block bg-black text-white
-                           font-bold uppercase text-[13px] px-3 py-[5px]
-                           hover:bg-white hover:text-black transition-colors duration-150"
-                style={{ letterSpacing: "0.07em" }}
-              >
-                {t.label}
-              </a>
-            ))}
+            display: "flex",
+            flexDirection: "column",
+
+            alignItems: "center",
+            justifyContent: "center",
+
+            gap: 10,
+
+            pointerEvents: "none",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 50,
+
+              pointerEvents: "auto",
+            }}
+          >
+            <NavTag label="CURSOS DE EXTENSÃO" href="#cursos" />
+            <NavTag label="AGENDA" href="#agenda" />
+            <NavTag label="SOBRE O LACIS" href="#sobre" />
+            <NavTag label="TEXTOS" href="#textos" />
+            <NavTag label="PESQUISAS" href="#pesquisas" />
           </div>
         </nav>
 
-        {/* Dot indicators */}
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20">
-          {imageSets.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => {
-                setVisible(false);
-                setTimeout(() => { setSetIndex(i); setVisible(true); }, 500);
-              }}
-              aria-label={`Conjunto ${i + 1}`}
-              className="w-2 h-2 rounded-full border border-white/50 transition-colors"
-              style={{ background: i === setIndex ? "#fff" : "rgba(255,255,255,0.25)" }}
-            />
-          ))}
-        </div>
       </section>
 
       {/* ══════════ RIGHT – dark green ══════════ */}
       <aside
-        className="flex flex-col items-center justify-around py-10 px-8 border-r border-white/10 overflow-hidden gap-50"
-        style={{ background: "#0c3b2e" }}
+        style={{
+          background: "#0c3b2e",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "2.5rem 2rem",
+          borderLeft: "1px solid rgba(255,255,255,0.1)",
+          overflow: "hidden",
+          gap: "4rem",
+        }}
       >
-        {/* Top: event block */}
-        <div className="w-11/12 flex flex-col items-center gap-6">
+        <div style={{ width: "91.666%", display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" }}>
           <h2
-            className="text-white font-black text-base uppercase leading-tight mb-5"
-            style={{ letterSpacing: "0.15em" }}
+            style={{
+              color: "#fff", fontWeight: 900, fontSize: "1.5rem",
+              textTransform: "uppercase", letterSpacing: "0.15em",
+              lineHeight: 1.2, margin: 0, textAlign: "center",
+            }}
           >
-            ENCONTRO DE AGOSTO
+            PRÓXIMO ENCONTRO: AGOSTO 2026
           </h2>
 
-          {/* Event photo – replace with <Image> */}
-          <div
-            className="w-full overflow-hidden rounded-sm"
-            style={{ aspectRatio: "4/3", background: "rgba(0,0,0,0.35)" }}
-          >
-            <Image
-              src="/evento1.png"
-              alt="Foto do encontro"
-              width={400}
-              height={300}
-              className="object-cover w-full h-full"
-            />
-          </div>
+          {/* Event photo placeholder */}
+          <Image src="/evento1.png" alt="Event photo" width={600} height={500} />
         </div>
 
-        {/* CTA */}
         <a
           href="#encontro"
-          className="text-white font-bold text-[16px] leading-snug hover:text-[#a8e6cf] transition-colors"
+          style={{ color: "#fff", fontWeight: 500, fontSize: 24, lineHeight: 1.4, textDecoration: "none", textAlign: "center" }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#a8e6cf")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "#fff")}
         >
-          INFORMAÇÕES e INSCRIÇÕES
+          O QUE É e INSCRIÇÕES
         </a>
       </aside>
-    </main>
+    </main >
   );
 }
