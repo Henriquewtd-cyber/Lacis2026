@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 
+
 // ─── 12 images: 4 cells × 3 each ───
 // Replace src values with paths inside /public/
 const cellImages = [
@@ -10,31 +11,31 @@ const cellImages = [
   [
     { src: "/img1.png", alt: "Imagem 1A" },
     { src: "/img5.png", alt: "Imagem 1B" },
-    { src: "/img1c.png", alt: "Imagem 1C" },
+    { src: "/site_em_construcao.jpg", alt: "Imagem 1C" },
   ],
   // Cell 1 – top-right
   [
     { src: "/img2.png", alt: "Imagem 2A" },
     { src: "/img6.png", alt: "Imagem 2B" },
-    { src: "/img2c.png", alt: "Imagem 2C" },
+    { src: "/site_em_construcao.jpg", alt: "Imagem 2C" },
   ],
   // Cell 2 – bottom-left
   [
     { src: "/img3.png", alt: "Imagem 3A" },
     { src: "/img7.jpg", alt: "Imagem 3B" },
-    { src: "/img3c.png", alt: "Imagem 3C" },
+    { src: "/site_em_construcao.jpg", alt: "Imagem 3C" },
   ],
   // Cell 3 – bottom-right
   [
     { src: "/img4.png", alt: "Imagem 4A" },
     { src: "/img8.jpg", alt: "Imagem 4B" },
-    { src: "/img4c.png", alt: "Imagem 4C" },
+    { src: "/site_em_construcao.jpg", alt: "Imagem 4C" },
   ],
 ];
 
 // Staggered intervals so cells rotate at different times
-const CELL_INTERVALS = [5000, 6500, 4500, 7000];
-const FADE_MS = 500;
+const CELL_INTERVALS = [10000, 10500, 11500, 11000];
+const FADE_MS = 1000;
 const FALLBACKS = ["#1a3a3a", "#2a3a1a", "#1a3020", "#1a2a3a"];
 
 function NavTag({ label, href }: { label: string; href: string }) {
