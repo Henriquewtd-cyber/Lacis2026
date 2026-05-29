@@ -1,0 +1,15 @@
+import { Routes, Route } from "react-router-dom";
+
+import Home from "./pages/home";
+import Estados from "./pages/dirigentes";
+import Cidades from "./pages/cidades";
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/dirigentes-de-cultura" element={<Estados />} />
+      <Route path="/dirigentes-de-cultura/:uf" element={<Cidades />} />
+    </Routes>
+  );
+}
