@@ -34,7 +34,7 @@ const CELL_INTERVALS = [10000, 10500, 11500, 11000];
 const FADE_MS = 1000;
 const FALLBACKS = ["#1a3a3a", "#2a3a1a", "#1a3020", "#1a2a3a"];
 
-function NavTag({ label, href }: { label: string; href: string }) {
+function NavTag({ label, href, color }: { label: string; href: string; color: string }) {
     const [hovered, setHovered] = useState(false);
 
     return (
@@ -46,7 +46,7 @@ function NavTag({ label, href }: { label: string; href: string }) {
                 display: "inline-block",
 
                 background: hovered ? "#fff" : "#000",
-                color: hovered ? "#000" : "#fff",
+                color: hovered ? "#000" : color,
 
                 fontWeight: 400,
                 textTransform: "uppercase",
@@ -206,11 +206,11 @@ export default function Home() {
                             pointerEvents: "auto",
                         }}
                     >
-                        <NavTag label="CURSOS DE EXTENSÃO" href="#cursos" />
-                        <NavTag label="AGENDA" href="#agenda" />
-                        <NavTag label="SOBRE O LACIS" href="#sobre" />
-                        <NavTag label="DIRIGENTES DE CULTURA" href="dirigentes-de-cultura" />
-                        <NavTag label="PESQUISAS" href="#pesquisas" />
+                        <NavTag label="CURSOS DE EXTENSÃO" href="" color="#fff" />
+                        <NavTag label="AGENDA" href="" color="#fff" />
+                        <NavTag label="SOBRE O LACIS" href="sobre" color="green" />
+                        <NavTag label="DIRIGENTES DE CULTURA" href="dirigentes-de-cultura" color="green" />
+                        <NavTag label="PESQUISAS" href="" color="#fff" />
                     </div>
                 </nav>
 
