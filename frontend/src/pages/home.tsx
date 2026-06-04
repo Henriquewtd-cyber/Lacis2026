@@ -3,72 +3,55 @@
 import { useState, useEffect } from "react";
 
 const cellImages = [
-    // Cell 0 – top-left
     [
-        { src: "/img1.png", alt: "Imagem 1A" },
-        { src: "/img5.png", alt: "Imagem 1B" },
-        { src: "/img9.png", alt: "Imagem 1C" },
+        { src: "/img1.png", alt: "Imagem 1" },
+        { src: "/img5.png", alt: "Imagem 5" },
+        { src: "/img9.png", alt: "Imagem 9" },
+        { src: "/img13.png", alt: "Imagem 13" },
     ],
-    // Cell 1 – top-right
     [
-        { src: "/img2.png", alt: "Imagem 2A" },
-        { src: "/img6.png", alt: "Imagem 2B" },
-        { src: "/img10.png", alt: "Imagem 2C" },
+        { src: "/img2.png", alt: "Imagem 2" },
+        { src: "/img6.png", alt: "Imagem 6" },
+        { src: "/img10.png", alt: "Imagem 10" },
+        { src: "/img14.png", alt: "Imagem 14" },
     ],
-    // Cell 2 – bottom-left
     [
-        { src: "/img3.png", alt: "Imagem 3A" },
-        { src: "/img7.jpg", alt: "Imagem 3B" },
-        { src: "/img11.png", alt: "Imagem 3C" },
+        { src: "/img3.png", alt: "Imagem 3" },
+        { src: "/img7.jpg", alt: "Imagem 7" },
+        { src: "/img11.png", alt: "Imagem 11" },
+        { src: "/img15.png", alt: "Imagem 15" },
     ],
-    // Cell 3 – bottom-right
     [
-        { src: "/img4.png", alt: "Imagem 4A" },
-        { src: "/img8.jpg", alt: "Imagem 4B" },
-        { src: "/img12.png", alt: "Imagem 4C" },
+        { src: "/img4.png", alt: "Imagem 4" },
+        { src: "/img8.jpg", alt: "Imagem 8" },
+        { src: "/img12.png", alt: "Imagem 12" },
+        { src: "/img16.png", alt: "Imagem 16" },
     ],
 ];
 
-// Staggered intervals so cells rotate at different times
 const CELL_INTERVALS = [10000, 10500, 11500, 11000];
 const FADE_MS = 1000;
 const FALLBACKS = ["#1a3a3a", "#2a3a1a", "#1a3020", "#1a2a3a"];
 
-function NavTag({ label, href, color }: { label: string; href: string; color: string }) {
-    const [hovered, setHovered] = useState(false);
+function NavTag({ label, href }: { label: string; href: string; }) {
 
     return (
         <a
             href={href}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
             style={{
                 display: "inline-block",
-
-                background: hovered ? "#fff" : "#000",
-                color: hovered ? "#000" : color,
-
+                background: "#000",
+                color: "#fff",
                 fontWeight: 400,
                 textTransform: "uppercase",
-
                 fontSize: "2rem",
                 lineHeight: 1,
-
                 padding: "0.2rem 0.8rem",
-
                 letterSpacing: "-0.03em",
-
                 textDecoration: "none",
-
-                transition: "all 0.15s ease",
-
+                transition: "color 0.15s ease, box-shadow 0.15s ease",
                 whiteSpace: "nowrap",
-
                 fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif",
-
-                boxShadow: hovered
-                    ? "0 0 25px rgba(255,255,255,0.25)"
-                    : "none",
             }}
         >
             {label}
@@ -120,40 +103,41 @@ export default function Home() {
                 fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif",
             }}
         >
-            {/* ══════════ LEFT – navy ══════════ */}
+            {/* ══════════ LEFT – verde escuro quase preto ══════════ */}
             <aside
                 style={{
-                    background: "#0b1145",
+                    background: "#001800",
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    justifyContent: "space-around",
+                    justifyContent: "space-between",
                     padding: "2.5rem 2rem",
                     borderRight: "1px solid rgba(255,255,255,0.1)",
                     overflow: "hidden",
-                    gap: "4rem",
                 }}
             >
-                <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" }}>
-                    {/* USP crest placeholder */}
+                {/* Bloco superior: brasão + texto USP/ECA/CBD */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" }}>
                     <img src="/brasao_usp1.png" alt="Brasão USP" width={60} height={80} />
-
-                    <p style={{ fontSize: 20, lineHeight: 1.6, color: "rgba(255,255,255,0.75)", textAlign: "center", margin: 0 }}>
-                        <strong style={{ color: "#fff", fontWeight: 700 }}>USP</strong> Universidade de São Paulo<br />
-                        <strong style={{ color: "#fff", fontWeight: 700 }}>ECA</strong> Escola de Comunicações e Artes<br />
-                        <strong style={{ color: "#fff", fontWeight: 700 }}>CBD</strong> Departamento de Informação e Cultura
+                    <p style={{ fontSize: 20, lineHeight: 1.6, color: "#90ee90", textAlign: "center", margin: 0 }}>
+                        <strong style={{ color: "#90ee90", fontWeight: 700 }}>USP</strong> Universidade de São Paulo<br />
+                        <strong style={{ color: "#90ee90", fontWeight: 700 }}>ECA</strong> Escola de Comunicações e Artes<br />
+                        <strong style={{ color: "#90ee90", fontWeight: 700 }}>CBD</strong> Departamento de Informação e Cultura
                     </p>
+                </div>
 
-                    {/* LACIS logo placeholder */}
+                {/* Centro: logomarca centralizada entre os dois blocos */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                     <img src="/logo_semfundo.png" alt="LACIS logo" width={300} height={300} />
                 </div>
 
-                <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-                    <p style={{ fontSize: 22, color: "rgba(255,255,255,0.8)", lineHeight: 1.5, margin: "0 0 0.5rem" }}>
-                        <strong style={{ color: "#fff" }}>LACIS</strong> Laboratório de Cultura,<br />
+                {/* Bloco inferior: nome LACIS + email */}
+                <div style={{ textAlign: "center" }}>
+                    <p style={{ fontSize: 22, color: "#90ee90", lineHeight: 1.5, margin: "0 0 0.5rem" }}>
+                        <strong style={{ color: "#90ee90" }}>LACIS</strong> Laboratório de Cultura,<br />
                         Informação e Sociedade
                     </p>
-                    <a href="mailto:lacis@usp.br" style={{ display: "block", fontSize: 22, color: "#7ec8f4", textDecoration: "none" }}>
+                    <a href="mailto:lacis@usp.br" style={{ display: "block", fontSize: 22, color: "#ccff00", textDecoration: "none" }}>
                         lacis@usp.br
                     </a>
                 </div>
@@ -162,7 +146,6 @@ export default function Home() {
             {/* ══════════ CENTER – 2×2 rotating image grid + floating nav ══════════ */}
             <section style={{ position: "relative", background: "#000" }}>
 
-                {/* 2×2 grid fills the whole column */}
                 <div
                     style={{
                         position: "absolute", inset: 0,
@@ -177,41 +160,25 @@ export default function Home() {
                     <RotatingCell images={cellImages[3]} interval={CELL_INTERVALS[3]} fallback={FALLBACKS[3]} />
                 </div>
 
-                {/* Nav overlay – z-index 20, floats above grid, pointer-events on tags only */}
-                {/* NAV CENTRAL */}
+                {/* Nav overlay */}
                 <nav
                     style={{
                         position: "absolute",
                         inset: 0,
-                        zIndex: 20,
-
+                        zIndex: 10,
                         display: "flex",
                         flexDirection: "column",
-
                         alignItems: "center",
-                        justifyContent: "center",
-
-                        gap: 10,
-
-                        pointerEvents: "none",
+                        justifyContent: "space-evenly",
+                        padding: "3rem 0",
                     }}
                 >
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            gap: 50,
-
-                            pointerEvents: "auto",
-                        }}
-                    >
-                        <NavTag label="CURSOS DE EXTENSÃO" href="" color="#fff" />
-                        <NavTag label="AGENDA" href="" color="#fff" />
-                        <NavTag label="SOBRE O LACIS" href="sobre" color="green" />
-                        <NavTag label="DIRIGENTES DE CULTURA" href="dirigentes-de-cultura" color="green" />
-                        <NavTag label="PESQUISAS" href="" color="#fff" />
-                    </div>
+                    <NavTag label="SOBRE O LACIS" href="sobre" />
+                    <NavTag label="AGENDA" href="" />
+                    <NavTag label="CURSOS DE EXTENSÃO" href="" />
+                    <NavTag label="TEXTOS" href="" />
+                    <NavTag label="PESQUISAS" href="" />
+                    <NavTag label="DIRIGENTES DE CULTURA BRASIL" href="dirigentes-de-cultura" />
                 </nav>
 
             </section>
@@ -241,22 +208,34 @@ export default function Home() {
                             lineHeight: 1.2, margin: 0, textAlign: "center",
                         }}
                     >
-                        PRÓXIMO ENCONTRO: AGOSTO 2026
+                        ENCONTRO DE AGOSTO
                     </h2>
 
-                    {/* Event photo placeholder */}
                     <img src="/evento1.png" alt="Event photo" width={600} height={500} />
                 </div>
 
-                <a
-                    href="#encontro"
-                    style={{ color: "#fff", fontWeight: 500, fontSize: 24, lineHeight: 1.4, textDecoration: "none", textAlign: "center" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "#a8e6cf")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "#fff")}
-                >
-                    O QUE É e INSCRIÇÕES
-                </a>
-            </aside>
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
+
+                    <a
+                        href="#sobre"
+                        style={{ color: "#fff", fontWeight: 500, fontSize: 24, lineHeight: 1.4, textDecoration: "none", textAlign: "center" }}
+                        onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#a8e6cf")}
+                        onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#fff")}
+                    >
+                        O QUE É
+                    </a>
+                    <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 20 }}>/</span>
+
+                    <a
+                        href="#inscricoes"
+                        style={{ color: "#fff", fontWeight: 500, fontSize: 24, lineHeight: 1.4, textDecoration: "none", textAlign: "center" }}
+                        onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#a8e6cf")}
+                        onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#fff")}
+                    >
+                        INSCRIÇÕES
+                    </a>
+                </div>
+            </aside >
         </main >
     );
 }
