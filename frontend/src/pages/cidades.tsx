@@ -1,29 +1,64 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import culturaEstados from "../assets/cultura-estados.json";
+
 
 type Cidade = {
     id: number;
     nome: string;
 };
 
-const ALPHABET = "ABCDEFGHIJLMNOPQRSTUVWXYZ".split("");
+type EstadoInfo = {
+    nomeEstado: string;
+    sigla: string;
+    secretaria: string;
+    secretario: string;
+    fotoUrl: string;
+    bandeiraUrl: string;
+    linkOficial: string;
+};
+
+function gerarEstado(sigla: string) {
+    const informacoes = culturaEstados[sigla as keyof typeof culturaEstados];
+
+    if (!informacoes) return null;
+
+    return {
+        nomeEstado: informacoes.nomeEstado,
+        sigla: informacoes.sigla,
+        secretaria: informacoes.secretaria,
+        secretario: informacoes.secretario,
+        fotoUrl: "/estados/placeholder-foto.jpg",
+        bandeiraUrl: "/bandeiras-br/" + sigla.toUpperCase() + ".png",
+        linkOficial: informacoes.linkOficial || "#",
+    };
+}
+
+const ESTADO_PADRAO: EstadoInfo = {
+    nomeEstado: "Estado",
+    sigla: "--",
+    secretaria: "SECRETARIA DA CULTURA",
+    secretario: "A DEFINIR",
+    fotoUrl: "/estados/placeholder-foto.jpg",
+    bandeiraUrl: "/estados/placeholder-bandeira.png",
+    linkOficial: "#",
+};
 
 export default function Cidades() {
     const { uf } = useParams();
 
     const [cidades, setCidades] = useState<Cidade[]>([]);
     const [loading, setLoading] = useState(true);
-    const [search, setSearch] = useState("");
-    const [activeLetra, setActiveLetra] = useState("");
 
-    const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
+    const ufKey = uf?.toUpperCase() ?? "";
+    const estado = gerarEstado(ufKey) || ESTADO_PADRAO;
 
     useEffect(() => {
         async function buscarCidades() {
             try {
                 setLoading(true);
                 const response = await fetch(
-                    `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf?.toUpperCase()}/municipios`
+                    `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${ufKey}/municipios`
                 );
                 const data = await response.json();
                 setCidades(data.sort((a: Cidade, b: Cidade) => a.nome.localeCompare(b.nome, "pt-BR")));
@@ -34,327 +69,160 @@ export default function Cidades() {
             }
         }
         buscarCidades();
-    }, [uf]);
-
-    const cidadesFiltradas = useMemo(() => {
-        if (!search.trim()) return cidades;
-        return cidades.filter((c) =>
-            c.nome.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-                .includes(search.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""))
-        );
-    }, [cidades, search]);
-
-    const agrupadas = useMemo(() => {
-        const grupos: Record<string, Cidade[]> = {};
-        for (const cidade of cidadesFiltradas) {
-            const letra = cidade.nome[0].toUpperCase();
-            if (!grupos[letra]) grupos[letra] = [];
-            grupos[letra].push(cidade);
-        }
-        return grupos;
-    }, [cidadesFiltradas]);
-
-    const letrasComCidades = useMemo(() => Object.keys(agrupadas).sort(), [agrupadas]);
-
-    function scrollToLetra(letra: string) {
-        setActiveLetra(letra);
-        sectionRefs.current[letra]?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    }, [ufKey]);
 
     return (
         <div
             style={{
                 minHeight: "100vh",
-                background: "#F5F0E8",
-                fontFamily: "'Georgia', serif",
+                fontFamily: "'Calibri', 'Segoe UI', Arial, sans-serif",
                 display: "flex",
                 flexDirection: "column",
             }}
         >
-            {/* ── Header ── */}
+            {/* ── Cabeçalho institucional ── */}
             <header
                 style={{
-                    background: "#1A1A2E",
-                    padding: "0 32px",
-                    height: 72,
+                    background: "#4F74C4",
+                    padding: "28px 40px",
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "space-between",
-                    position: "sticky",
-                    top: 0,
-                    zIndex: 50,
-                    boxShadow: "0 2px 20px rgba(0,0,0,0.3)",
+                    gap: 0,
+                    flexWrap: "wrap",
                 }}
             >
-                <div>
-                    <p
-                        style={{
-                            color: "#C9A84C",
-                            fontSize: 10,
-                            letterSpacing: 4,
-                            fontFamily: "monospace",
-                            marginBottom: 2,
-                            textTransform: "uppercase",
-                        }}
-                    >
-                        Brasil
-                    </p>
-                    <h1 style={{ color: "white", fontSize: 22, fontWeight: "bold", margin: 0 }}>
-                        Cidades de{" "}
-                        <span style={{ color: "#C9A84C" }}>{uf?.toUpperCase()}</span>
-                    </h1>
-                </div>
-
-                <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
-                    {!loading && (
-                        <span style={{ color: "#8888aa", fontSize: 12, fontFamily: "monospace" }}>
-                            {cidadesFiltradas.length} resultado{cidadesFiltradas.length !== 1 ? "s" : ""}
-                        </span>
-                    )}
-                    <Link
-                        to="/dirigentes-de-cultura"
-                        style={{
-                            background: "#C9A84C",
-                            color: "#1A1A2E",
-                            padding: "8px 20px",
-                            borderRadius: 6,
-                            fontWeight: "bold",
-                            fontSize: 13,
-                            textDecoration: "none",
-                            fontFamily: "monospace",
-                            letterSpacing: 1,
-                            transition: "opacity 0.2s",
-                        }}
-                        onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.85")}
-                        onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-                    >
-                        ← Voltar
-                    </Link>
-                </div>
-            </header>
-
-            {/* ── Search bar ── */}
-            <div
-                style={{
-                    background: "#EDEAE0",
-                    borderBottom: "1px solid #D4C5A0",
-                    padding: "12px 32px",
-                    position: "sticky",
-                    top: 72,
-                    zIndex: 40,
-                }}
-            >
-                <input
-                    type="text"
-                    placeholder="Buscar cidade..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                {/* Bandeira do estado */}
+                <img
+                    src={estado.bandeiraUrl}
+                    alt={`Bandeira de ${estado.nomeEstado}`}
                     style={{
-                        width: "100%",
-                        maxWidth: 480,
-                        padding: "10px 16px",
-                        border: "1.5px solid #C9A84C",
-                        borderRadius: 6,
-                        fontSize: 14,
-                        background: "white",
-                        fontFamily: "monospace",
-                        outline: "none",
-                        color: "#1A1A2E",
-                        boxSizing: "border-box",
+                        width: 170,
+                        height: 140,
+                        objectFit: "fill",
+                        flexShrink: 0,
                     }}
                 />
-            </div>
 
-            {/* ── Layout com índice lateral ── */}
-            <div style={{ display: "flex", flex: 1 }}>
-                {/* Índice Alfabético */}
-                {!loading && (
-                    <aside
+                {/* Bloco escuro com nome do estado / secretaria / secretário */}
+                <div
+                    style={{
+                        background: "#15155C",
+                        padding: "18px 32px",
+                        minHeight: 140,
+                        flex: 1,
+                        minWidth: 280,
+                        display: "flex",
+                        flexDirection: "column",
+                        justifyContent: "center",
+                        gap: 4,
+                    }}
+                >
+                    <h1
                         style={{
-                            width: 44,
-                            background: "#1A1A2E",
-                            position: "sticky",
-                            top: 120,
-                            alignSelf: "flex-start",
-                            height: "calc(100vh - 120px)",
-                            overflowY: "auto",
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            paddingTop: 12,
-                            paddingBottom: 12,
-                            gap: 2,
-                            scrollbarWidth: "none",
+                            color: "#FFD23F",
+                            fontSize: 30,
+                            fontWeight: 700,
+                            margin: 0,
+                            lineHeight: 1.2,
                         }}
                     >
-                        {ALPHABET.map((letra) => {
-                            const hasItems = !!agrupadas[letra];
-                            const isActive = activeLetra === letra;
-                            return (
-                                <button
-                                    key={letra}
-                                    onClick={() => hasItems && scrollToLetra(letra)}
-                                    disabled={!hasItems}
-                                    style={{
-                                        width: 28,
-                                        height: 22,
-                                        border: "none",
-                                        borderRadius: 3,
-                                        background: isActive ? "#C9A84C" : "transparent",
-                                        color: isActive ? "#1A1A2E" : hasItems ? "white" : "#3A3A5E",
-                                        fontSize: 10,
-                                        fontWeight: "bold",
-                                        fontFamily: "monospace",
-                                        cursor: hasItems ? "pointer" : "default",
-                                        transition: "all 0.15s",
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        if (hasItems && !isActive)
-                                            (e.currentTarget as HTMLButtonElement).style.background = "#2A2A4E";
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        if (!isActive)
-                                            (e.currentTarget as HTMLButtonElement).style.background = "transparent";
-                                    }}
-                                >
-                                    {letra}
-                                </button>
-                            );
-                        })}
-                    </aside>
+                        {estado.nomeEstado.toUpperCase()} ({estado.sigla})
+                    </h1>
+                    <p style={{ color: "white", fontSize: 20, margin: 0, fontWeight: 600 }}>
+                        {estado.secretaria}
+                    </p>
+                    <p style={{ color: "white", fontSize: 17, margin: 0 }}>
+                        SECRETÁRIO(A): {estado.secretario}
+                    </p>
+                </div>
+
+                {/* Foto do secretário */}
+                <img
+                    src={estado.fotoUrl}
+                    alt={`Foto do(a) secretário(a) de ${estado.nomeEstado}`}
+                    style={{
+                        width: 130,
+                        height: 140,
+                        objectFit: "fill",
+                        flexShrink: 0,
+                    }}
+                />
+
+                {/* Link oficial */}
+                <a
+                    href={estado.linkOficial}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                        background: "#29ABE2",
+                        color: "#15155C",
+                        fontWeight: 700,
+                        fontSize: 16,
+                        textDecoration: "underline",
+                        padding: "12px 22px",
+                        marginLeft: 24,
+                        flexShrink: 0,
+                    }}
+                >
+                    {estado.linkOficial}
+                </a>
+            </header>
+
+            {/* ── Lista de municípios ── */}
+            <main
+                style={{
+                    background: "#15155C",
+                    flex: 1,
+                    padding: "32px 48px 64px",
+                }}
+            >
+                <h2
+                    style={{
+                        color: "#FFA640",
+                        fontSize: 30,
+                        fontWeight: 700,
+                        margin: "0 0 20px",
+                    }}
+                >
+                    MUNICÍPIOS
+                </h2>
+
+                {loading && (
+                    <p style={{ color: "white", fontSize: 14 }}>Carregando cidades...</p>
                 )}
 
-                {/* Conteúdo principal */}
-                <main style={{ flex: 1, padding: "24px 32px 64px" }}>
-                    {loading && (
-                        <div
-                            style={{
-                                textAlign: "center",
-                                paddingTop: 80,
-                                color: "#8888aa",
-                                fontFamily: "monospace",
-                                fontSize: 14,
-                                letterSpacing: 2,
-                            }}
-                        >
-                            Carregando cidades...
-                        </div>
-                    )}
+                {!loading && cidades.length === 0 && (
+                    <p style={{ color: "white", fontSize: 14 }}>Nenhuma cidade encontrada.</p>
+                )}
 
-                    {!loading && cidadesFiltradas.length === 0 && (
-                        <div
-                            style={{
-                                textAlign: "center",
-                                paddingTop: 80,
-                                color: "#8888aa",
-                                fontFamily: "monospace",
-                                fontSize: 14,
-                            }}
-                        >
-                            Nenhuma cidade encontrada para "{search}".
-                        </div>
-                    )}
-
-                    {!loading &&
-                        letrasComCidades.map((letra) => (
-                            <section
-                                key={letra}
-                                ref={(el) => { sectionRefs.current[letra] = el; }}
-                                style={{ marginBottom: 32 }}
+                {!loading && cidades.length > 0 && (
+                    <div
+                        style={{
+                            columnWidth: 230,
+                            columnGap: 32,
+                        }}
+                    >
+                        {cidades.map((cidade) => (
+                            <div
+                                key={cidade.id}
+                                style={{
+                                    color: "#FFFF66",
+                                    fontSize: 16,
+                                    padding: "3px 0",
+                                    breakInside: "avoid",
+                                }}
                             >
-                                {/* Cabeçalho da letra */}
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: 12,
-                                        marginBottom: 12,
-                                        position: "sticky",
-                                        top: 120,
-                                        zIndex: 10,
-                                        background: "#E8DFC8",
-                                        padding: "6px 0",
-                                    }}
+                                <Link
+                                    to={`/dirigentes-de-cultura/${uf}/${cidade.nome}`}
+                                    style={{ color: "inherit", textDecoration: "none" }}
                                 >
-                                    <span
-                                        style={{
-                                            fontSize: 22,
-                                            fontWeight: "bold",
-                                            color: "#1A1A2E",
-                                            width: 28,
-                                            textAlign: "center",
-                                            lineHeight: 1,
-                                        }}
-                                    >
-                                        {letra}
-                                    </span>
-                                    <div
-                                        style={{ flex: 1, height: 1, background: "#C9A84C", opacity: 0.6 }}
-                                    />
-                                    <span
-                                        style={{
-                                            fontSize: 10,
-                                            color: "#9A8A6A",
-                                            fontFamily: "monospace",
-                                        }}
-                                    >
-                                        {agrupadas[letra].length}
-                                    </span>
-                                </div>
-
-                                {/* Grid de cidades */}
-                                <div
-                                    style={{
-                                        display: "grid",
-                                        gridTemplateColumns:
-                                            "repeat(auto-fill, minmax(150px, 1fr))",
-                                        gap: 8,
-                                    }}
-                                >
-                                    {agrupadas[letra].map((cidade) => (
-                                        <Link
-                                            key={cidade.id}
-                                            to={`/dirigentes-de-cultura/${uf}/${cidade.nome}`}
-                                            style={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                                padding: "10px 8px",
-                                                background: "white",
-                                                border: "1.5px solid #E0D5BE",
-                                                borderRadius: 6,
-                                                textDecoration: "none",
-                                                color: "#1A1A2E",
-                                                fontSize: 12,
-                                                fontFamily: "monospace",
-                                                textAlign: "center",
-                                                lineHeight: 1.3,
-                                                transition: "all 0.15s",
-                                                cursor: "pointer",
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                e.currentTarget.style.background = "#1A1A2E";
-                                                e.currentTarget.style.color = "#C9A84C";
-                                                e.currentTarget.style.borderColor = "#1A1A2E";
-                                                e.currentTarget.style.transform = "translateY(-1px)";
-                                                e.currentTarget.style.boxShadow = "0 4px 12px rgba(26,26,46,0.15)";
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.currentTarget.style.background = "white";
-                                                e.currentTarget.style.color = "#1A1A2E";
-                                                e.currentTarget.style.borderColor = "#E0D5BE";
-                                                e.currentTarget.style.transform = "translateY(0)";
-                                                e.currentTarget.style.boxShadow = "none";
-                                            }}
-                                        >
-                                            {cidade.nome}
-                                        </Link>
-                                    ))}
-                                </div>
-                            </section>
+                                    {cidade.nome}
+                                </Link>
+                            </div>
                         ))}
-                </main>
-            </div>
+                    </div>
+                )}
+            </main>
         </div>
     );
 }

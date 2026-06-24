@@ -60,15 +60,15 @@ function PdfViewer({ src = "/Regimento.pdf" }) {
     }
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "#ffffff", borderRadius: "12px", overflow: "hidden", boxShadow: "0 4px 20px rgba(0, 0, 0, 0.04)", border: "1px solid #eef0f2" }}>
+        <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "#0f2b1e", borderRadius: "10px", overflow: "hidden", border: "1px solid #1c4632" }}>
             {/* Toolbar */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", background: "#f8f9fa", borderBottom: "1px solid #eef0f2", flexShrink: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", background: "#0a1f15", borderBottom: "1px solid #1c4632", flexShrink: 0 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <span style={{ fontSize: 13, fontWeight: 600, color: "#1e293b" }}>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "#ffffff" }}>
                         Regimento LACIS
                     </span>
                     {totalPages > 0 && (
-                        <span style={{ fontSize: 12, color: "#64748b", background: "#e2e8f0", padding: "2px 8px", borderRadius: "20px" }}>
+                        <span style={{ fontSize: 12, color: "#cfe8da", background: "#163828", padding: "2px 8px", borderRadius: "20px", border: "1px solid #2a5c41" }}>
                             {totalPages} {totalPages === 1 ? "página" : "páginas"}
                         </span>
                     )}
@@ -79,17 +79,17 @@ function PdfViewer({ src = "/Regimento.pdf" }) {
                         <button
                             onClick={() => setPageNum((p) => Math.max(1, p - 1))}
                             disabled={pageNum <= 1}
-                            style={{ width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #e2e8f0", borderRadius: "6px", background: "#ffffff", color: "#475569", cursor: "pointer", transition: "all 0.2s", opacity: pageNum <= 1 ? 0.4 : 1 }}
+                            style={{ width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #2a5c41", borderRadius: "6px", background: "#163828", color: "#eef5ee", cursor: "pointer", transition: "all 0.2s", opacity: pageNum <= 1 ? 0.4 : 1 }}
                         >
                             ←
                         </button>
-                        <span style={{ fontSize: 13, color: "#1e293b", fontWeight: 500, minWidth: 45, textAlign: "center" }}>
+                        <span style={{ fontSize: 13, color: "#ffffff", fontWeight: 600, minWidth: 45, textAlign: "center" }}>
                             {pageNum} / {totalPages}
                         </span>
                         <button
                             onClick={() => setPageNum((p) => Math.min(totalPages, p + 1))}
                             disabled={pageNum >= totalPages}
-                            style={{ width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #e2e8f0", borderRadius: "6px", background: "#ffffff", color: "#475569", cursor: "pointer", transition: "all 0.2s", opacity: pageNum >= totalPages ? 0.4 : 1 }}
+                            style={{ width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #2a5c41", borderRadius: "6px", background: "#163828", color: "#eef5ee", cursor: "pointer", transition: "all 0.2s", opacity: pageNum >= totalPages ? 0.4 : 1 }}
                         >
                             →
                         </button>
@@ -97,14 +97,14 @@ function PdfViewer({ src = "/Regimento.pdf" }) {
                 )}
             </div>
 
-            {/* Canvas area */}
-            <div ref={containerRef} style={{ flex: 1, minHeight: 0, overflowY: "auto", background: "#f1f5f9", padding: 24, display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
+            {/* Canvas area — fundo claro propositalmente, para o documento ficar legível */}
+            <div ref={containerRef} style={{ flex: 1, minHeight: 0, overflowY: "auto", background: "#e7eee9", padding: 24, display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
                 {loading ? (
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%" }}>
-                        <span style={{ fontSize: 14, color: "#64748b" }}>Carregando documento...</span>
+                        <span style={{ fontSize: 14, color: "#475569" }}>Carregando documento...</span>
                     </div>
                 ) : (
-                    <canvas ref={canvasRef} style={{ boxShadow: "0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.05)", display: "block", maxWidth: "100%", background: "white", borderRadius: "4px" }} />
+                    <canvas ref={canvasRef} style={{ boxShadow: "0 10px 25px -5px rgba(0,0,0,0.25), 0 8px 10px -6px rgba(0,0,0,0.15)", display: "block", maxWidth: "100%", background: "white", borderRadius: "4px" }} />
                 )}
             </div>
         </div>
@@ -114,59 +114,54 @@ function PdfViewer({ src = "/Regimento.pdf" }) {
 export default function Sobre() {
     return (
         <>
-            {/* Google Fonts baseadas em design editorial limpo */}
+            {/* Google Fonts: Inter para corpo/labels, Playfair Display só na citação histórica */}
             <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;1,400&display=swap');
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;1,400&display=swap');
 
                 body {
                     margin: 0;
-                    background-color: #f8fafc;
+                    background-color: #07150f;
                 }
                 .lacis-card {
-                    background: #ffffff;
-                    border-radius: 12px;
+                    background: #0f2b1e;
+                    border-radius: 10px;
                     padding: 1.75rem;
                     display: flex;
                     flex-direction: column;
-                    box-shadow: 0 1px 3px rgba(0,0,0,0.02), 0 1px 2px rgba(0,0,0,0.04);
-                    border: 1px solid #eef0f2;
+                    border: 1px solid #1c4632;
                 }
                 .lacis-label {
+                    display: inline-flex;
+                    align-items: center;
                     font-family: 'Inter', sans-serif;
                     font-size: 12px;
-                    font-weight: 700;
-                    color: #0f172a;
+                    font-weight: 800;
+                    color: #ffffff;
                     text-transform: uppercase;
-                    letter-spacing: 0.5px;
+                    letter-spacing: 1px;
                     margin-bottom: 1.25rem;
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                }
-                .lacis-label::before {
-                    content: '';
-                    width: 4px;
-                    height: 12px;
-                    background: #0284c7;
-                    border-radius: 2px;
+                    background: #060f0a;
+                    padding: 6px 12px;
+                    border-radius: 4px;
+                    width: fit-content;
                 }
                 .lacis-area-tag {
                     display: inline-block;
                     padding: 6px 12px;
-                    background: #f1f5f9;
-                    border-radius: 8px;
+                    background: #163828;
+                    border-radius: 6px;
                     font-size: 12px;
-                    color: #334155;
+                    color: #cfe8da;
                     font-weight: 500;
                     margin-bottom: 8px;
-                    border: 1px solid #e2e8f0;
+                    border: 1px solid #1c4632;
                 }
                 .lacis-member-row {
                     display: flex;
                     align-items: center;
                     gap: 14px;
                     padding: 12px 0;
-                    border-bottom: 1px solid #f1f5f9;
+                    border-bottom: 1px solid #163828;
                 }
                 .lacis-member-row:last-child {
                     border-bottom: none;
@@ -174,15 +169,16 @@ export default function Sobre() {
                 .lacis-avatar {
                     width: 36px; height: 36px;
                     border-radius: 50%;
-                    background: #e0f2fe;
+                    background: #163828;
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     font-family: 'Inter', sans-serif;
                     font-size: 12px;
-                    font-weight: 600;
-                    color: #0369a1;
+                    font-weight: 700;
+                    color: #e8b84b;
                     flex-shrink: 0;
+                    border: 1px solid #2a5c41;
                 }
                 /* Custom scrollbar para o visualizador ficar limpo */
                 ::-webkit-scrollbar {
@@ -193,26 +189,26 @@ export default function Sobre() {
                     background: transparent;
                 }
                 ::-webkit-scrollbar-thumb {
-                    background: #cbd5e1;
+                    background: #2a5c41;
                     border-radius: 3px;
                 }
                 ::-webkit-scrollbar-thumb:hover {
-                    background: #94a3b8;
+                    background: #3d7a59;
                 }
             `}</style>
 
-            <div style={{ fontFamily: "'Inter', sans-serif", background: "#f8fafc", height: "100vh", overflow: "hidden", display: "flex", flexDirection: "column", color: "#1e293b" }}>
+            <div style={{ fontFamily: "'Inter', sans-serif", background: "#07150f", height: "100vh", overflow: "hidden", display: "flex", flexDirection: "column", color: "#eef5ee" }}>
 
-                {/* Header Institucional Limpo */}
-                <header style={{ background: "#ffffff", borderBottom: "1px solid #e2e8f0", padding: "0 2rem", flexShrink: 0 }}>
+                {/* Header Institucional */}
+                <header style={{ background: "#0a1f15", borderBottom: "1px solid #1c4632", padding: "0 2rem", flexShrink: 0 }}>
                     <div style={{ maxWidth: 1300, margin: "0 auto", height: 72, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                         <div>
-                            <div style={{ fontWeight: 800, fontSize: 22, color: "#0f172a", letterSpacing: "-0.5px" }}>LACIS</div>
-                            <div style={{ fontSize: 11, color: "#64748b", marginTop: 2, fontWeight: 500 }}>
-                                Laboratório de Cultura, Informação e Sociedade <span style={{ color: "#cbd5e1", margin: "0 4px" }}>•</span> ECA-USP
+                            <div style={{ fontWeight: 900, fontSize: 22, color: "#ffffff", letterSpacing: "-0.5px" }}>LACIS</div>
+                            <div style={{ fontSize: 11, color: "#9fb8a8", marginTop: 2, fontWeight: 500 }}>
+                                Laboratório de Cultura, Informação e Sociedade <span style={{ color: "#2a5c41", margin: "0 4px" }}>•</span> ECA-USP
                             </div>
                         </div>
-                        <div style={{ fontSize: 11, fontWeight: 600, color: "#64748b", background: "#f1f5f9", padding: "6px 12px", borderRadius: "6px" }}>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "#cfe8da", background: "#163828", padding: "6px 12px", borderRadius: "6px", border: "1px solid #2a5c41" }}>
                             Fundado em 2017
                         </div>
                     </div>
@@ -224,7 +220,7 @@ export default function Sobre() {
                     {/* COLUNA ESQUERDA — Histórico */}
                     <aside className="lacis-card">
                         <div className="lacis-label">Histórico</div>
-                        <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 15, lineHeight: 1.7, color: "#334155", margin: 0, fontStyle: "italic" }}>
+                        <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 15, lineHeight: 1.7, color: "#cfe8da", margin: 0, fontStyle: "italic" }}>
                             O Laboratório de Cultura, Informação e Sociedade foi fundado com o objetivo de reunir especialistas para estudar
                             e desenvolver pesquisas sobre as relações entre cultura, informação,
                             bibliotecas e centros culturais, bem como organizar seminários e oferecer
@@ -232,7 +228,7 @@ export default function Sobre() {
                         </p>
 
                         <div style={{ marginTop: "2rem" }}>
-                            <div style={{ fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "10px" }}>
+                            <div style={{ fontSize: 11, fontWeight: 800, color: "#9fb8a8", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "10px" }}>
                                 Áreas Temáticas
                             </div>
                             <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
@@ -244,11 +240,11 @@ export default function Sobre() {
                             </div>
                         </div>
 
-                        <div style={{ marginTop: "auto", paddingTop: "1.25rem", borderTop: "1px solid #f1f5f9", display: "flex", alignItems: "center", gap: 12 }}>
-                            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#0284c7" }} />
+                        <div style={{ marginTop: "auto", paddingTop: "1.25rem", borderTop: "1px solid #163828", display: "flex", alignItems: "center", gap: 12 }}>
+                            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#e8b84b" }} />
                             <div>
-                                <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>ECA-USP</div>
-                                <div style={{ fontSize: 11, color: "#64748b" }}>Escola de Comunicações e Artes</div>
+                                <div style={{ fontSize: 13, fontWeight: 700, color: "#ffffff" }}>ECA-USP</div>
+                                <div style={{ fontSize: 11, color: "#9fb8a8" }}>Escola de Comunicações e Artes</div>
                             </div>
                         </div>
                     </aside>
@@ -266,8 +262,8 @@ export default function Sobre() {
                                 <div key={m.name} className="lacis-member-row">
                                     <div className="lacis-avatar">{m.initials}</div>
                                     <div>
-                                        <div style={{ fontSize: 13, fontWeight: 600, color: "#0f172a" }}>{m.name}</div>
-                                        <div style={{ fontSize: 11, color: "#64748b", marginTop: 2, fontWeight: 500 }}>{m.role}</div>
+                                        <div style={{ fontSize: 13, fontWeight: 600, color: "#ffffff" }}>{m.name}</div>
+                                        <div style={{ fontSize: 11, color: "#9fb8a8", marginTop: 2, fontWeight: 500 }}>{m.role}</div>
                                     </div>
                                 </div>
                             ))}

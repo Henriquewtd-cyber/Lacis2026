@@ -1,0 +1,245 @@
+{
+    "AC": {
+        "nomeEstado": "Acre",
+        "sigla": "AC",
+        "secretaria": "Secretaria de Estado de Educação e Cultura",
+        "secretario": "Reginaldo Luís Pereira Prates",
+        "fotoUrl": "/estados/AC-foto.jpg",
+        "bandeiraUrl": "/estados/AC-bandeira.png",
+        "linkOficial": "https://see.ac.gov.br/"
+    },
+    "AL": {
+        "nomeEstado": "Alagoas",
+        "sigla": "AL",
+        "secretaria": "Secretaria de Estado da Cultura e Economia Criativa",
+        "secretario": "Mellina Torres Freitas",
+        "fotoUrl": "/estados/AL-foto.jpg",
+        "bandeiraUrl": "/estados/AL-bandeira.png",
+        "linkOficial": "https://secult.al.gov.br/"
+    },
+    "AP": {
+        "nomeEstado": "Amapá",
+        "sigla": "AP",
+        "secretaria": "Secretaria de Estado da Cultura (Secult)",
+        "secretario": "Clícia Vieira Di Miceli",
+        "fotoUrl": "/estados/AP-foto.jpg",
+        "bandeiraUrl": "/estados/AP-bandeira.png",
+        "linkOficial": "https://secult.portal.ap.gov.br/"
+    },
+    "AM": {
+        "nomeEstado": "Amazonas",
+        "sigla": "AM",
+        "secretaria": "Secretaria de Estado de Cultura e Economia Criativa",
+        "secretario": "Caio André Pinheiro de Oliveira",
+        "fotoUrl": "/estados/AM-foto.jpg",
+        "bandeiraUrl": "/estados/AM-bandeira.png",
+        "linkOficial": "https://cultura.am.gov.br/"
+    },
+    "BA": {
+        "nomeEstado": "Bahia",
+        "sigla": "BA",
+        "secretaria": "Secretaria de Cultura do Estado da Bahia",
+        "secretario": "Bruno Monteiro",
+        "fotoUrl": "/estados/BA-foto.jpg",
+        "bandeiraUrl": "/estados/BA-bandeira.png",
+        "linkOficial": "https://www.ba.gov.br/cultura/"
+    },
+    "CE": {
+        "nomeEstado": "Ceará",
+        "sigla": "CE",
+        "secretaria": "Secretaria da Cultura (Secult)",
+        "secretario": "Luisa Cela",
+        "fotoUrl": "/estados/CE-foto.jpg",
+        "bandeiraUrl": "/estados/CE-bandeira.png",
+        "linkOficial": "https://www.secult.ce.gov.br/"
+    },
+    "DF": {
+        "nomeEstado": "Distrito Federal",
+        "sigla": "DF",
+        "secretaria": "Secretaria de Estado de Cultura e Economia Criativa",
+        "secretario": "Claudio Abrantes",
+        "fotoUrl": "/estados/DF-foto.jpg",
+        "bandeiraUrl": "/estados/DF-bandeira.png",
+        "linkOficial": "https://www.cultura.df.gov.br/"
+    },
+    "ES": {
+        "nomeEstado": "Espírito Santo",
+        "sigla": "ES",
+        "secretaria": "Secretaria da Cultura (Secult)",
+        "secretario": "Fabrício Noronha",
+        "fotoUrl": "/estados/ES-foto.jpg",
+        "bandeiraUrl": "/estados/ES-bandeira.png",
+        "linkOficial": "https://secult.es.gov.br/"
+    },
+    "GO": {
+        "nomeEstado": "Goiás",
+        "sigla": "GO",
+        "secretaria": "Secretaria de Estado da Cultura",
+        "secretario": "Yara Nunes dos Santos",
+        "fotoUrl": "/estados/GO-foto.jpg",
+        "bandeiraUrl": "/estados/GO-bandeira.png",
+        "linkOficial": "https://goias.gov.br/cultura/"
+    },
+    "MA": {
+        "nomeEstado": "Maranhão",
+        "sigla": "MA",
+        "secretaria": "Secretaria de Estado da Cultura (Secma)",
+        "secretario": "Abimael Berredo",
+        "fotoUrl": "/estados/MA-foto.jpg",
+        "bandeiraUrl": "/estados/MA-bandeira.png",
+        "linkOficial": "https://cultura.ma.gov.br/"
+    },
+    "MT": {
+        "nomeEstado": "Mato Grosso",
+        "sigla": "MT",
+        "secretaria": "Secretaria de Estado de Cultura, Esporte e Lazer",
+        "secretario": "Jan Moura",
+        "fotoUrl": "/estados/MT-foto.jpg",
+        "bandeiraUrl": "/estados/MT-bandeira.png",
+        "linkOficial": "#"
+    },
+    "MS": {
+        "nomeEstado": "Mato Grosso do Sul",
+        "sigla": "MS",
+        "secretaria": "Secretaria de Estado de Turismo, Esporte e Cultura (Setesc)",
+        "secretario": "Marcelo Ferreira Miranda",
+        "fotoUrl": "/estados/MS-foto.jpg",
+        "bandeiraUrl": "/estados/MS-bandeira.png",
+        "linkOficial": "https://www.setesc.ms.gov.br/"
+    },
+    "MG": {
+        "nomeEstado": "Minas Gerais",
+        "sigla": "MG",
+        "secretaria": "Secretaria de Estado de Cultura e Turismo",
+        "secretario": "Bárbara Botega",
+        "fotoUrl": "/estados/MG-foto.jpg",
+        "bandeiraUrl": "/estados/MG-bandeira.png",
+        "linkOficial": "#"
+    },
+    "PA": {
+        "nomeEstado": "Pará",
+        "sigla": "PA",
+        "secretaria": "Secretaria de Estado de Cultura",
+        "secretario": "Úrsula Vidal",
+        "fotoUrl": "/estados/PA-foto.jpg",
+        "bandeiraUrl": "/estados/PA-bandeira.png",
+        "linkOficial": "#"
+    },
+    "PB": {
+        "nomeEstado": "Paraíba",
+        "sigla": "PB",
+        "secretaria": "Secretaria de Estado da Cultura",
+        "secretario": "Pedro Santos",
+        "fotoUrl": "/estados/PB-foto.jpg",
+        "bandeiraUrl": "/estados/PB-bandeira.png",
+        "linkOficial": "#"
+    },
+    "PR": {
+        "nomeEstado": "Paraná",
+        "sigla": "PR",
+        "secretaria": "Secretaria de Estado da Cultura",
+        "secretario": "Luciana Casagrande Pereira",
+        "fotoUrl": "/estados/PR-foto.jpg",
+        "bandeiraUrl": "/estados/PR-bandeira.png",
+        "linkOficial": "#"
+    },
+    "PE": {
+        "nomeEstado": "Pernambuco",
+        "sigla": "PE",
+        "secretaria": "Secretaria de Cultura",
+        "secretario": "Cacau de Paula",
+        "fotoUrl": "/estados/PE-foto.jpg",
+        "bandeiraUrl": "/estados/PE-bandeira.png",
+        "linkOficial": "#"
+    },
+    "PI": {
+        "nomeEstado": "Piauí",
+        "sigla": "PI",
+        "secretaria": "Secretaria de Estado da Cultura (Secult)",
+        "secretario": "Rodrigo Amorim",
+        "fotoUrl": "/estados/PI-foto.jpg",
+        "bandeiraUrl": "/estados/PI-bandeira.png",
+        "linkOficial": "http://www.cultura.pi.gov.br/"
+    },
+    "RJ": {
+        "nomeEstado": "Rio de Janeiro",
+        "sigla": "RJ",
+        "secretaria": "Secretaria de Estado de Cultura e Economia Criativa",
+        "secretario": "Danielle Barros",
+        "fotoUrl": "/estados/RJ-foto.jpg",
+        "bandeiraUrl": "/estados/RJ-bandeira.png",
+        "linkOficial": "https://cultura.rj.gov.br/"
+    },
+    "RN": {
+        "nomeEstado": "Rio Grande do Norte",
+        "sigla": "RN",
+        "secretaria": "Secretaria de Estado da Cultura",
+        "secretario": "Mary Land Brito",
+        "fotoUrl": "/estados/RN-foto.jpg",
+        "bandeiraUrl": "/estados/RN-bandeira.png",
+        "linkOficial": "https://www.cultura.rn.gov.br/"
+    },
+    "RS": {
+        "nomeEstado": "Rio Grande do Sul",
+        "sigla": "RS",
+        "secretaria": "Secretaria de Estado da Cultura (Sedac)",
+        "secretario": "Eduardo Debacco Loureiro",
+        "fotoUrl": "/estados/RS-foto.jpg",
+        "bandeiraUrl": "/estados/RS-bandeira.png",
+        "linkOficial": "https://cultura.rs.gov.br/"
+    },
+    "RO": {
+        "nomeEstado": "Rondônia",
+        "sigla": "RO",
+        "secretaria": "Fundação Cultural do Estado de Rondônia",
+        "secretario": "Paulo Higo",
+        "fotoUrl": "/estados/RO-foto.jpg",
+        "bandeiraUrl": "/estados/RO-bandeira.png",
+        "linkOficial": "#"
+    },
+    "RR": {
+        "nomeEstado": "Roraima",
+        "sigla": "RR",
+        "secretaria": "Secretaria de Estado da Cultura e Turismo",
+        "secretario": "Alex Ferreira",
+        "fotoUrl": "/estados/RR-foto.jpg",
+        "bandeiraUrl": "/estados/RR-bandeira.png",
+        "linkOficial": "#"
+    },
+    "SC": {
+        "nomeEstado": "Santa Catarina",
+        "sigla": "SC",
+        "secretaria": "Secretaria de Estado de Turismo, Cultura e Esporte (SOL)",
+        "secretario": "Tufi Michreff Neto",
+        "fotoUrl": "/estados/SC-foto.jpg",
+        "bandeiraUrl": "/estados/SC-bandeira.png",
+        "linkOficial": "#"
+    },
+    "SP": {
+        "nomeEstado": "São Paulo",
+        "sigla": "SP",
+        "secretaria": "Secretaria da Cultura, Economia e Indústria Criativas",
+        "secretario": "Marília Marton",
+        "fotoUrl": "/estados/SP-foto.jpg",
+        "bandeiraUrl": "/estados/SP-bandeira.png",
+        "linkOficial": "#"
+    },
+    "SE": {
+        "nomeEstado": "Sergipe",
+        "sigla": "SE",
+        "secretaria": "Fundação de Cultura e Arte Aperipê",
+        "secretario": "Valadares Filho",
+        "fotoUrl": "/estados/SE-foto.jpg",
+        "bandeiraUrl": "/estados/SE-bandeira.png",
+        "linkOficial": "#"
+    },
+    "TO": {
+        "nomeEstado": "Tocantins",
+        "sigla": "TO",
+        "secretaria": "Secretaria de Estado da Cultura (Secult)",
+        "secretario": "Adolfo Bezerra de Menezes",
+        "fotoUrl": "/estados/TO-foto.jpg",
+        "bandeiraUrl": "/estados/TO-bandeira.png",
+        "linkOficial": "https://www.to.gov.br/secult"
+    }
+}
