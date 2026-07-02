@@ -1,15 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
 const members = [
-    { name: "Incitus de Almeida", role: "Coordenador", initials: "IA" },
-    { name: "Black Boreal", role: "Vice-coordenador", initials: "BB" },
-    { name: "Anita Sóror", role: "Secretária Geral", initials: "AS" },
-    { name: "Madelaine Proust", role: "Membro", initials: "MP" },
-    { name: "Electra Freud", role: "Membro", initials: "EF" },
-    { name: "Édipo Reis", role: "Membro", initials: "ÉR" },
+    { name: "Leonardo de Assis", role: "Coordenador", initials: "IA", photo: "/responsaveis/LeonardodeAssis.jpeg" },
+    { name: "Professor Paletta", role: "Vice-coordenador", initials: "BB", photo: "/responsaveis/Prof.Paletta.jpeg" },
 ];
 
-const areas = ["Políticas culturais", "Biblioteconomia", "Informação e sociedade", "Mediação cultural"];
 
 function PdfViewer({ src = "/Regimento.pdf" }) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -45,9 +40,10 @@ function PdfViewer({ src = "/Regimento.pdf" }) {
         pdfDoc.getPage(num).then((page: any) => {
             const container = containerRef.current as unknown as HTMLDivElement;
             if (!container) return;
-            const containerWidth = container.clientWidth - 40;
+            const containerWidth = container.clientWidth - 48;
             const viewport = page.getViewport({ scale: 1 });
-            const scale = containerWidth / viewport.width;
+            const zoom = 1.15;
+            const scale = (containerWidth / viewport.width) * zoom;
             const scaled = page.getViewport({ scale });
             const canvas = canvasRef.current as unknown as HTMLCanvasElement;
             const ctx = canvas.getContext("2d");
@@ -60,36 +56,36 @@ function PdfViewer({ src = "/Regimento.pdf" }) {
     }
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "#0f2b1e", borderRadius: "10px", overflow: "hidden", border: "1px solid #1c4632" }}>
-            {/* Toolbar */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", background: "#0a1f15", borderBottom: "1px solid #1c4632", flexShrink: 0 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: "#ffffff" }}>
+        <div className="flex h-full flex-col overflow-hidden bg-[#0a1622]">
+            {/* Toolbar interna (não é uma topbar da página, pertence só ao visualizador) */}
+            <div className="flex flex-shrink-0 items-center justify-between border-b border-[#1f3a4d] bg-[#0a1622] px-8 py-5">
+                <div className="flex items-center gap-3">
+                    <span className="text-sm font-extrabold uppercase tracking-wider text-white">
                         Regimento LACIS
                     </span>
                     {totalPages > 0 && (
-                        <span style={{ fontSize: 12, color: "#cfe8da", background: "#163828", padding: "2px 8px", borderRadius: "20px", border: "1px solid #2a5c41" }}>
+                        <span className="rounded-full border border-[#2a4a63] bg-[#16293b] px-3 py-1 text-xs font-semibold text-[#a9c2d1]">
                             {totalPages} {totalPages === 1 ? "página" : "páginas"}
                         </span>
                     )}
                 </div>
 
                 {totalPages > 1 && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <div className="flex items-center gap-2">
                         <button
                             onClick={() => setPageNum((p) => Math.max(1, p - 1))}
                             disabled={pageNum <= 1}
-                            style={{ width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #2a5c41", borderRadius: "6px", background: "#163828", color: "#eef5ee", cursor: "pointer", transition: "all 0.2s", opacity: pageNum <= 1 ? 0.4 : 1 }}
+                            className="flex h-9 w-9 items-center justify-center rounded-md border border-[#2a4a63] bg-[#16293b] text-white transition-opacity disabled:opacity-40"
                         >
                             ←
                         </button>
-                        <span style={{ fontSize: 13, color: "#ffffff", fontWeight: 600, minWidth: 45, textAlign: "center" }}>
+                        <span className="min-w-[52px] text-center text-sm font-bold text-white">
                             {pageNum} / {totalPages}
                         </span>
                         <button
                             onClick={() => setPageNum((p) => Math.min(totalPages, p + 1))}
                             disabled={pageNum >= totalPages}
-                            style={{ width: 32, height: 32, display: "flex", alignItems: "center", justifyContent: "center", border: "1px solid #2a5c41", borderRadius: "6px", background: "#163828", color: "#eef5ee", cursor: "pointer", transition: "all 0.2s", opacity: pageNum >= totalPages ? 0.4 : 1 }}
+                            className="flex h-9 w-9 items-center justify-center rounded-md border border-[#2a4a63] bg-[#16293b] text-white transition-opacity disabled:opacity-40"
                         >
                             →
                         </button>
@@ -97,14 +93,20 @@ function PdfViewer({ src = "/Regimento.pdf" }) {
                 )}
             </div>
 
-            {/* Canvas area — fundo claro propositalmente, para o documento ficar legível */}
-            <div ref={containerRef} style={{ flex: 1, minHeight: 0, overflowY: "auto", background: "#e7eee9", padding: 24, display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
+            {/* Área do PDF — fundo azul claro, própria rolagem */}
+            <div
+                ref={containerRef}
+                className="lacis-scroll-blue flex flex-1 min-h-0 items-start justify-center overflow-auto bg-[#dbe9f5] p-8"
+            >
                 {loading ? (
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "100%", height: "100%" }}>
-                        <span style={{ fontSize: 14, color: "#475569" }}>Carregando documento...</span>
+                    <div className="flex h-full w-full items-center justify-center">
+                        <span className="text-sm font-medium text-[#3a5876]">Carregando documento...</span>
                     </div>
                 ) : (
-                    <canvas ref={canvasRef} style={{ boxShadow: "0 10px 25px -5px rgba(0,0,0,0.25), 0 8px 10px -6px rgba(0,0,0,0.15)", display: "block", maxWidth: "100%", background: "white", borderRadius: "4px" }} />
+                    <canvas
+                        ref={canvasRef}
+                        className="block bg-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.3),0_8px_10px_-6px_rgba(0,0,0,0.2)]"
+                    />
                 )}
             </div>
         </div>
@@ -114,163 +116,108 @@ function PdfViewer({ src = "/Regimento.pdf" }) {
 export default function Sobre() {
     return (
         <>
-            {/* Google Fonts: Inter para corpo/labels, Playfair Display só na citação histórica */}
             <style>{`
-                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;1,400&display=swap');
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
-                body {
-                    margin: 0;
-                    background-color: #07150f;
-                }
-                .lacis-card {
-                    background: #0f2b1e;
-                    border-radius: 10px;
-                    padding: 1.75rem;
-                    display: flex;
-                    flex-direction: column;
-                    border: 1px solid #1c4632;
-                }
-                .lacis-label {
-                    display: inline-flex;
-                    align-items: center;
-                    font-family: 'Inter', sans-serif;
-                    font-size: 12px;
-                    font-weight: 800;
-                    color: #ffffff;
-                    text-transform: uppercase;
-                    letter-spacing: 1px;
-                    margin-bottom: 1.25rem;
-                    background: #060f0a;
-                    padding: 6px 12px;
-                    border-radius: 4px;
-                    width: fit-content;
-                }
-                .lacis-area-tag {
-                    display: inline-block;
-                    padding: 6px 12px;
-                    background: #163828;
-                    border-radius: 6px;
-                    font-size: 12px;
-                    color: #cfe8da;
-                    font-weight: 500;
-                    margin-bottom: 8px;
-                    border: 1px solid #1c4632;
-                }
-                .lacis-member-row {
-                    display: flex;
-                    align-items: center;
-                    gap: 14px;
-                    padding: 12px 0;
-                    border-bottom: 1px solid #163828;
-                }
-                .lacis-member-row:last-child {
-                    border-bottom: none;
-                }
-                .lacis-avatar {
-                    width: 36px; height: 36px;
-                    border-radius: 50%;
-                    background: #163828;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-family: 'Inter', sans-serif;
-                    font-size: 12px;
-                    font-weight: 700;
-                    color: #e8b84b;
-                    flex-shrink: 0;
-                    border: 1px solid #2a5c41;
-                }
-                /* Custom scrollbar para o visualizador ficar limpo */
-                ::-webkit-scrollbar {
-                    width: 6px;
-                    height: 6px;
-                }
-                ::-webkit-scrollbar-track {
-                    background: transparent;
-                }
-                ::-webkit-scrollbar-thumb {
-                    background: #2a5c41;
-                    border-radius: 3px;
-                }
-                ::-webkit-scrollbar-thumb:hover {
-                    background: #3d7a59;
-                }
+                .lacis-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+                .lacis-scroll::-webkit-scrollbar-track { background: transparent; }
+                .lacis-scroll::-webkit-scrollbar-thumb { background: #2a5c41; border-radius: 3px; }
+                .lacis-scroll::-webkit-scrollbar-thumb:hover { background: #3d7a59; }
+                .lacis-scroll-blue::-webkit-scrollbar { width: 6px; height: 6px; }
+                .lacis-scroll-blue::-webkit-scrollbar-track { background: transparent; }
+                .lacis-scroll-blue::-webkit-scrollbar-thumb { background: #2a4a63; border-radius: 3px; }
+                .lacis-scroll-blue::-webkit-scrollbar-thumb:hover { background: #3c637f; }
             `}</style>
 
-            <div style={{ fontFamily: "'Inter', sans-serif", background: "#07150f", height: "100vh", overflow: "hidden", display: "flex", flexDirection: "column", color: "#eef5ee" }}>
+            {/* 3 colunas grudadas, sem topbar, ocupando a tela inteira de cima a baixo */}
+            <div className="flex h-screen w-screen overflow-hidden [font-family:'Inter',sans-serif] text-[#eef5ee]">
 
-                {/* Header Institucional */}
-                <header style={{ background: "#0a1f15", borderBottom: "1px solid #1c4632", padding: "0 2rem", flexShrink: 0 }}>
-                    <div style={{ maxWidth: 1300, margin: "0 auto", height: 72, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                {/* COLUNA ESQUERDA — Histórico (verde) */}
+                <aside className="lacis-scroll flex h-full w-[32%] min-w-[360px] flex-shrink-0 flex-col overflow-y-auto bg-[#001800] pb-10 pl-10 pt-16">
+                    <div className="mb-6 w-fit rounded bg-black px-4 py-2 text-sm font-extrabold uppercase tracking-widest text-white">
+                        Histórico
+                    </div>
+                    <p className="m-0 text-[15px] leading-[1.75] text-[#deebe4] pr-10">
+                        Nos fins de 2010 foi discutida na USP/Escola de Comunicação e Artes a
+                        necessidade de reunir pessoas em torno de um campo temático senão inédito, pelo
+                        menos pouco explorado, o corte intersecional entre Cultura e Informação. Essas duas
+                        áreas já estão consolidadas por especialistas do mundo todo e por bibliografia ampla
+                        como campos autônomos. Os especialistas atuais se identificam com um ou outro desses
+                        campos temáticos, e poucos trabalham na conexão entre eles, ainda que ambos tenham
+                        proximidade e, às vezes, se integram como no caso da progressiva integração de
+                        biblioteca e centro de cultura. Os estudos de "ação cultural", enquanto atividade de
+                        bibliotecas públicas, traz contribuições tanto da Cultura quanto da Informação,
+                        tornando-se a expressão mais clara do inter-relacionamento de ambas. Dessa síntese
+                        resulta a ideia a ser escrita da biblioteca pós-Gutenberg, uma pesquisa de interesse
+                        social de amplas proporções e relevância no ambiente dominado pelas redes sociais.
+                        Além da interdisciplinariedade que as instituições contemporâneas de pesquisa
+                        valorizam, ela se expande para o meio social como práticas conectadas a bibliotecas,
+                        museus e outras entidades afins.
+                        Desde o seu início, o LACIS teve a preocupação de localizar pesquisadores que,
+                        de alguma forma, explícita ou implicitamente, tenham afinidades por esse campo
+                        temático que se forma. Com isso procurou-se reuni-los, visando a troca de informações,
+                        debates de ideias, bem como gerar novos aportes de conteúdo, visando alcançar a
+                        densidade necessária para consolidá-lo como área de estudos prioritária para todos que
+                        atuam entre cultura/conhecimento/informação. Esse objetivo, não por coincidência,
+                        remeteu ao Departamento de Informação e Cultura da ECA, onde a ideia inicial foi
+                        gerada e se formalizou como graduação e pós-graduação.
+                        Grupos de pesquisa na USP, como o LACIS, são conjuntos de indivíduos
+                        (pesquisadores, docentes, estudantes e técnicos) organizados para investigar temas
+                        específicos de forma colaborativa. Esses grupos, registrados no Diretório do CNPq,
+                        desenvolvem pesquisas temáticas em linhas comuns, que podem ser interdisciplinares
+                        ou não, e que resultam em produção científica e tecnológica. Reúnem integrantes
+                        organizados para desenvolver projetos por prazo determinado. Esses projetos podem ser
+                        propostos por docentes da USP, de outras instituições.
+                        O LACIS, além das pesquisas, busca criar atividades culturais de larga
+                        amplitude, trazendo para o Laboratório as ações culturais que abrangem todas as
+                        linguagens artísticas, particularmente aquelas associadas à ideia da liberdade de
+                        informação e transformação social. Também busca oferecer como extensão cursos que
+                        possam contribuir para aprimorar o desempenho de dirigentes e promotores de cultura
+                        em seus territórios. Nesse sentido, o LACIS busca, a médio prazo, instituir um conjunto
+                        multifacetado que será a base para a formação de especialistas em gestão cultural.
+                    </p>
+
+
+
+                    <div className="mt-8 flex items-center gap-3 border-t border-[#163828] pr-10 pt-5">
+                        <div className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-[#e8b84b]" />
                         <div>
-                            <div style={{ fontWeight: 900, fontSize: 22, color: "#ffffff", letterSpacing: "-0.5px" }}>LACIS</div>
-                            <div style={{ fontSize: 11, color: "#9fb8a8", marginTop: 2, fontWeight: 500 }}>
-                                Laboratório de Cultura, Informação e Sociedade <span style={{ color: "#2a5c41", margin: "0 4px" }}>•</span> ECA-USP
-                            </div>
-                        </div>
-                        <div style={{ fontSize: 11, fontWeight: 700, color: "#cfe8da", background: "#163828", padding: "6px 12px", borderRadius: "6px", border: "1px solid #2a5c41" }}>
-                            Fundado em 2017
+                            <div className="text-sm font-bold text-white">USP-ECA</div>
+                            <div className="text-xs text-[#9fb8a8]">Escola de Comunicações e Artes</div>
                         </div>
                     </div>
-                </header>
+                </aside>
 
-                {/* Grid Assimétrico Estilo Editorial */}
-                <main style={{ maxWidth: 1300, width: "100%", margin: "0 auto", padding: "2rem", display: "grid", gridTemplateColumns: "300px 1fr 280px", gap: "2rem", flex: 1, minHeight: 0, boxSizing: "border-box" }}>
+                {/* COLUNA CENTRAL — Visualizador de PDF (azul) */}
+                <section className="h-full flex-1 min-w-0">
+                    <PdfViewer />
+                </section>
 
-                    {/* COLUNA ESQUERDA — Histórico */}
-                    <aside className="lacis-card">
-                        <div className="lacis-label">Histórico</div>
-                        <p style={{ fontFamily: "'Playfair Display', serif", fontSize: 15, lineHeight: 1.7, color: "#cfe8da", margin: 0, fontStyle: "italic" }}>
-                            O Laboratório de Cultura, Informação e Sociedade foi fundado com o objetivo de reunir especialistas para estudar
-                            e desenvolver pesquisas sobre as relações entre cultura, informação,
-                            bibliotecas e centros culturais, bem como organizar seminários e oferecer
-                            cursos sobre políticas culturais.
-                        </p>
-
-                        <div style={{ marginTop: "2rem" }}>
-                            <div style={{ fontSize: 11, fontWeight: 800, color: "#9fb8a8", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "10px" }}>
-                                Áreas Temáticas
-                            </div>
-                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                                {areas.map((t) => (
-                                    <div key={t} className="lacis-area-tag">
-                                        {t}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-
-                        <div style={{ marginTop: "auto", paddingTop: "1.25rem", borderTop: "1px solid #163828", display: "flex", alignItems: "center", gap: 12 }}>
-                            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#e8b84b" }} />
-                            <div>
-                                <div style={{ fontSize: 13, fontWeight: 700, color: "#ffffff" }}>ECA-USP</div>
-                                <div style={{ fontSize: 11, color: "#9fb8a8" }}>Escola de Comunicações e Artes</div>
-                            </div>
-                        </div>
-                    </aside>
-
-                    {/* COLUNA CENTRAL — O Visualizador de PDF */}
-                    <section style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
-                        <PdfViewer />
-                    </section>
-
-                    {/* COLUNA DIREITA — Equipe */}
-                    <aside className="lacis-card" style={{ minHeight: 0 }}>
-                        <div className="lacis-label" style={{ flexShrink: 0 }}>Coordenação</div>
-                        <div style={{ display: "flex", flexDirection: "column", flex: 1, overflowY: "auto", minHeight: 0 }}>
-                            {members.map((m) => (
-                                <div key={m.name} className="lacis-member-row">
-                                    <div className="lacis-avatar">{m.initials}</div>
-                                    <div>
-                                        <div style={{ fontSize: 13, fontWeight: 600, color: "#ffffff" }}>{m.name}</div>
-                                        <div style={{ fontSize: 11, color: "#9fb8a8", marginTop: 2, fontWeight: 500 }}>{m.role}</div>
-                                    </div>
+                {/* COLUNA DIREITA — Equipe (verde) */}
+                <aside className="lacis-scroll flex h-full w-[30%] min-w-[340px] flex-shrink-0 flex-col overflow-y-auto bg-[#0c3b2e] pb-10 pl-10 pt-16">
+                    <div className="mb-6 w-fit flex-shrink-0 rounded bg-black px-4 py-2 text-sm font-extrabold uppercase tracking-widest text-white">
+                        Coordenação
+                    </div>
+                    <div className="flex flex-col pr-10">
+                        {members.map((m) => (
+                            <div
+                                key={m.name}
+                                className="flex items-center gap-5 border-b border-[#163828] py-5 last:border-b-0"
+                            >
+                                <img
+                                    src={m.photo}
+                                    alt={m.name}
+                                    className="h-16 w-16 flex-shrink-0 border border-[#2a5c41] bg-[#163828] object-cover"
+                                />
+                                <div>
+                                    <div className="text-base font-bold text-white">{m.name}</div>
+                                    <div className="mt-1 text-sm font-medium text-[#9fb8a8]">{m.role}</div>
                                 </div>
-                            ))}
-                        </div>
-                    </aside>
+                            </div>
+                        ))}
+                    </div>
+                </aside>
 
-                </main>
             </div>
         </>
     );

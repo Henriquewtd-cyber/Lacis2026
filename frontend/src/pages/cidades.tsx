@@ -28,7 +28,7 @@ function gerarEstado(sigla: string) {
         sigla: informacoes.sigla,
         secretaria: informacoes.secretaria,
         secretario: informacoes.secretario,
-        fotoUrl: "/estados/placeholder-foto.jpg",
+        fotoUrl: informacoes.fotoUrl || "/estados/placeholder-foto.jpg",
         bandeiraUrl: "/bandeiras-br/" + sigla.toUpperCase() + ".png",
         linkOficial: informacoes.linkOficial || "#",
     };
@@ -166,6 +166,7 @@ export default function Cidades() {
                 >
                     {estado.linkOficial}
                 </a>
+
             </header>
 
             {/* ── Lista de municípios ── */}
@@ -207,7 +208,7 @@ export default function Cidades() {
                                 key={cidade.id}
                                 style={{
                                     color: "#FFFF66",
-                                    fontSize: 16,
+                                    fontSize: 22,
                                     padding: "3px 0",
                                     breakInside: "avoid",
                                 }}
