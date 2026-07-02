@@ -137,7 +137,7 @@ export default function Sobre() {
                     <div className="mb-6 w-fit rounded bg-black px-4 py-2 text-sm font-extrabold uppercase tracking-widest text-white">
                         Histórico
                     </div>
-                    <p className="m-0 text-[15px] leading-[1.75] text-[#deebe4] pr-10">
+                    <p className="m-0 text-[17px] leading-[1.8] text-[#deebe4] pr-10">
                         Nos fins de 2010 foi discutida na USP/Escola de Comunicação e Artes a
                         necessidade de reunir pessoas em torno de um campo temático senão inédito, pelo
                         menos pouco explorado, o corte intersecional entre Cultura e Informação. Essas duas
@@ -182,8 +182,8 @@ export default function Sobre() {
                     <div className="mt-8 flex items-center gap-3 border-t border-[#163828] pr-10 pt-5">
                         <div className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-[#e8b84b]" />
                         <div>
-                            <div className="text-sm font-bold text-white">USP-ECA</div>
-                            <div className="text-xs text-[#9fb8a8]">Escola de Comunicações e Artes</div>
+                            <div className="text-base font-bold text-white">USP-ECA</div>
+                            <div className="text-sm text-[#9fb8a8]">Escola de Comunicações e Artes</div>
                         </div>
                     </div>
                 </aside>
@@ -195,23 +195,23 @@ export default function Sobre() {
 
                 {/* COLUNA DIREITA — Equipe (verde) */}
                 <aside className="lacis-scroll flex h-full w-[30%] min-w-[340px] flex-shrink-0 flex-col overflow-y-auto bg-[#0c3b2e] pb-10 pl-10 pt-16">
-                    <div className="mb-6 w-fit flex-shrink-0 rounded bg-black px-4 py-2 text-sm font-extrabold uppercase tracking-widest text-white">
+                    <div className="mb-8 w-fit flex-shrink-0 rounded bg-black px-4 py-2 text-sm font-extrabold uppercase tracking-widest text-white">
                         Coordenação
                     </div>
                     <div className="flex flex-col pr-10">
                         {members.map((m) => (
                             <div
                                 key={m.name}
-                                className="flex items-center gap-5 border-b border-[#163828] py-5 last:border-b-0"
+                                className="flex items-center gap-6 border-b border-[#163828] py-8 last:border-b-0"
                             >
                                 <img
                                     src={m.photo}
                                     alt={m.name}
-                                    className="h-16 w-16 flex-shrink-0 border border-[#2a5c41] bg-[#163828] object-cover"
+                                    className="h-28 w-28 flex-shrink-0 border border-[#2a5c41] bg-[#163828] object-cover"
                                 />
                                 <div>
-                                    <div className="text-base font-bold text-white">{m.name}</div>
-                                    <div className="mt-1 text-sm font-medium text-[#9fb8a8]">{m.role}</div>
+                                    <div className="text-xl font-bold text-white">{m.name}</div>
+                                    <div className="mt-1.5 text-base font-medium text-[#9fb8a8]">{m.role}</div>
                                 </div>
                             </div>
                         ))}
