@@ -12,9 +12,6 @@ interface DirigenteCultura {
     imagensCidade?: string[];
 }
 
-// TODO: dado placeholder — trocar por fetch de API ou import de JSON
-// (ex.: secretarios-cultura-completo.json) quando a fonte de dados for definida.
-
 const Estados: Record<string, string> = {
     'AC': "Acre",
     'AL': "Alagoas",
@@ -46,9 +43,6 @@ const Estados: Record<string, string> = {
 };
 
 export default function DirigenteCulturaPage() {
-    // params.estado e params.cidade ainda não são usados enquanto os dados
-    // são placeholder — serão usados para buscar o dirigente correto
-    // (via API ou JSON) quando a fonte de dados estiver definida.
     const params = useParams<{ uf: string; cidade: string }>();
 
     if (!params.uf || !params.cidade) {
@@ -66,6 +60,8 @@ export default function DirigenteCulturaPage() {
         );
     }
 
+    const infos = null; // trocar por requisição real ---------------------------
+
     const PLACEHOLDER: DirigenteCultura = {
         estado: Estados[params.uf],
         uf: params.uf,
@@ -76,11 +72,32 @@ export default function DirigenteCulturaPage() {
         urlOficial:
             "https://www.vilavelha.es.gov.br/secretaria/turismo-esporte-e-cultura",
         foto: "/rostoHolder.avif",
-        imagensCidade: ["/cristoHolder.jpg", "/praiaHolder.jpg"],
+        imagensCidade: ["/cristoHolder.webp", "/praiaHolder.webp"],
     };
 
     const dirigente = PLACEHOLDER;
     const imagens = dirigente.imagensCidade?.slice(0, 2) ?? [];
+
+    if (!infos) {
+        return (
+            <main className="min-h-screen w-full bg-[#7CEFC4] px-6 py-10 sm:px-12 sm:py-14">
+                <div className="mx-auto max-w-5xl">
+                    <h1 className="text-3xl font-bold text-neutral-950 sm:text-4xl">
+                        Informações não encontradas
+                    </h1>
+                    <p className="mt-4 text-lg text-neutral-700">
+                        Não foi possível encontrar informações para o estado {params.uf} e cidade {params.cidade}. Caso você acredite que essas informações deveriam estar disponíveis, por favor, entre em contato com a equipe responsável.
+                    </p>
+                    <p className="mt-4 text-lg text-neutral-700">
+                        Estamos trabalhando para disponibilizar as informações mais atualizadas. Agradecemos a sua compreensão.
+                    </p>
+                    <p className="mt-4 text-lg text-neutral-700">
+                        Contato: lacis@usp.br
+                    </p>
+                </div>
+            </main>
+        );
+    }
 
     return (
         <main className="min-h-screen w-full bg-[#7CEFC4] px-6 py-10 sm:px-12 sm:py-14 max-h-screen">

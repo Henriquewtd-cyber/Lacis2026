@@ -4,28 +4,28 @@ import { useState, useEffect } from "react";
 
 const cellImages = [
     [
-        { src: "/img1.png", alt: "Imagem 1" },
-        { src: "/img5.png", alt: "Imagem 5" },
-        { src: "/img9.png", alt: "Imagem 9" },
-        { src: "/img13.png", alt: "Imagem 13" },
+        { src: "home-images/img1.webp", alt: "Imagem 1" },
+        { src: "home-images/img5.webp", alt: "Imagem 5" },
+        { src: "home-images/img9.webp", alt: "Imagem 9" },
+        { src: "home-images/img13.webp", alt: "Imagem 13" },
     ],
     [
-        { src: "/img2.png", alt: "Imagem 2" },
-        { src: "/img6.png", alt: "Imagem 6" },
-        { src: "/img10.png", alt: "Imagem 10" },
-        { src: "/img14.png", alt: "Imagem 14" },
+        { src: "home-images/img2.webp", alt: "Imagem 2" },
+        { src: "home-images/img6.webp", alt: "Imagem 6" },
+        { src: "home-images/img10.webp", alt: "Imagem 10" },
+        { src: "home-images/img14.webp", alt: "Imagem 14" },
     ],
     [
-        { src: "/img3.png", alt: "Imagem 3" },
-        { src: "/img7.jpg", alt: "Imagem 7" },
-        { src: "/img11.png", alt: "Imagem 11" },
-        { src: "/img15.png", alt: "Imagem 15" },
+        { src: "home-images/img3.webp", alt: "Imagem 3" },
+        { src: "home-images/img7.webp", alt: "Imagem 7" },
+        { src: "home-images/img11.webp", alt: "Imagem 11" },
+        { src: "home-images/img15.webp", alt: "Imagem 15" },
     ],
     [
-        { src: "/img4.png", alt: "Imagem 4" },
-        { src: "/img8.jpg", alt: "Imagem 8" },
-        { src: "/img12.png", alt: "Imagem 12" },
-        { src: "/img16.png", alt: "Imagem 16" },
+        { src: "home-images/img4.webp", alt: "Imagem 4" },
+        { src: "home-images/img8.webp", alt: "Imagem 8" },
+        { src: "home-images/img12.webp", alt: "Imagem 12" },
+        { src: "home-images/img16.webp", alt: "Imagem 16" },
     ],
 ];
 
@@ -118,7 +118,7 @@ export default function Home() {
             >
                 {/* Bloco superior: brasão + texto USP/ECA/CBD */}
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" }}>
-                    <img src="/brasao_usp1.png" alt="Brasão USP" width={60} height={80} />
+                    <img src="/brasao_usp1.webp" alt="Brasão USP" width={60} height={80} />
                     <p style={{ fontSize: 20, lineHeight: 1.6, color: "#90ee90", textAlign: "center", margin: 0 }}>
                         <strong style={{ color: "#90ee90", fontWeight: 700 }}>USP</strong> Universidade de São Paulo<br />
                         <strong style={{ color: "#90ee90", fontWeight: 700 }}>ECA</strong> Escola de Comunicações e Artes<br />
@@ -128,7 +128,7 @@ export default function Home() {
 
                 {/* Centro: logomarca centralizada entre os dois blocos */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <img src="/logo_semfundo.png" alt="LACIS logo" width={300} height={300} />
+                    <img src="/logo_semfundo.webp" alt="LACIS logo" width={300} height={300} />
                 </div>
 
                 {/* Bloco inferior: nome LACIS + email */}
@@ -211,7 +211,7 @@ export default function Home() {
                         ENCONTRO DE AGOSTO
                     </h2>
 
-                    <img src="/evento1.png" alt="Event photo" width={600} height={500} />
+                    <img src="/evento1.webp" alt="Event photo" width={600} height={500} />
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>

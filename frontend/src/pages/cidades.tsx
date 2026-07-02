@@ -29,7 +29,7 @@ function gerarEstado(sigla: string) {
         secretaria: informacoes.secretaria,
         secretario: informacoes.secretario,
         fotoUrl: informacoes.fotoUrl || "/estados/placeholder-foto.jpg",
-        bandeiraUrl: "/bandeiras-br/" + sigla.toUpperCase() + ".png",
+        bandeiraUrl: "/bandeiras-br/" + sigla.toUpperCase() + ".webp",
         linkOficial: informacoes.linkOficial || "#",
     };
 }
@@ -143,7 +143,7 @@ export default function Cidades() {
                     style={{
                         width: 130,
                         height: 140,
-                        objectFit: "fill",
+                        objectFit: "cover",
                         flexShrink: 0,
                     }}
                 />
