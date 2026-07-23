@@ -1,4 +1,10 @@
 import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+
+const API_URL = import.meta.env.VITE_API_URL + "/cidades";
+const API_BASE = import.meta.env.VITE_STORAGE_URL;
+
 
 interface DirigenteCultura {
     estado: string;
@@ -6,7 +12,7 @@ interface DirigenteCultura {
     secretaria: string;
     cargo: string;
     nome: string;
-    urlOficial: string;
+    url: string;
     foto?: string;
     cidade: string;
     imagensCidade?: string[];
@@ -45,6 +51,68 @@ const Estados: Record<string, string> = {
 export default function DirigenteCulturaPage() {
     const params = useParams<{ uf: string; cidade: string }>();
 
+    const [dirigente, setDirigente] = useState<DirigenteCultura | null>(null);
+    const [num_imagens, setNumImagens] = useState<number>(0);
+    const [loading, setLoading] = useState(true);
+
+    const getDirigente = async () => {
+        try {
+            setLoading(true);
+
+            if (!params.uf || !params.cidade) {
+                throw new Error("Parâmetros de UF ou cidade não fornecidos");
+            }
+
+            const new_params = new URLSearchParams({
+                estado: params.uf.toUpperCase(),
+                nome_cidade: params.cidade,
+            });
+            const res = await fetch(`${API_URL}?${new_params.toString()}`, {
+                method: "GET",
+                headers: { Accept: "application/json" },
+            });
+            if (!res.ok) throw new Error(`Cidade não encontrada (HTTP ${res.status})`);
+            const data = await res.json();
+
+            setDirigente({
+                estado: Estados[data.estado] ?? data.estado,
+                uf: data.estado,
+                cidade: data.nome_cidade,
+                secretaria: data.nome_orgao,
+                cargo: data.cargo ?? "Titular",
+                nome: data.nome_secretario,
+                url: data.url,
+                foto: data.foto_perfil
+                    ? `${API_BASE}/storage/${data.foto_perfil}`
+                    : undefined,
+
+                imagensCidade: [
+                    data.foto_1
+                        ? `${API_BASE}/storage/${data.foto_1}`
+                        : null,
+                    data.foto_2
+                        ? `${API_BASE}/storage/${data.foto_2}`
+                        : null,
+                ].filter(Boolean) as string[],
+            });
+
+            setNumImagens(
+                [data.foto_1, data.foto_2].filter((foto) => foto !== null).length
+            );
+        } catch (error) {
+            console.error(error);
+            setDirigente(null);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (!params.uf || !params.cidade) return;
+
+        getDirigente();
+    }, [params.uf, params.cidade]);
+
     if (!params.uf || !params.cidade) {
         return (
             <main className="min-h-screen w-full bg-[#7CEFC4] px-6 py-10 sm:px-12 sm:py-14">
@@ -60,25 +128,16 @@ export default function DirigenteCulturaPage() {
         );
     }
 
-    const infos = null; // trocar por requisição real ---------------------------
 
-    const PLACEHOLDER: DirigenteCultura = {
-        estado: Estados[params.uf],
-        uf: params.uf,
-        cidade: params.cidade,
-        secretaria: "SECRETARIA DE TURISMO, ESPORTE E CULTURA",
-        cargo: "TITULAR",
-        nome: "Nome do Dirigente",
-        urlOficial:
-            "https://www.vilavelha.es.gov.br/secretaria/turismo-esporte-e-cultura",
-        foto: "/rostoHolder.avif",
-        imagensCidade: ["/cristoHolder.webp", "/praiaHolder.webp"],
-    };
+    if (loading) {
+        return (
+            <main className="min-h-screen flex items-center justify-center">
+                Carregando...
+            </main>
+        );
+    }
 
-    const dirigente = PLACEHOLDER;
-    const imagens = dirigente.imagensCidade?.slice(0, 2) ?? [];
-
-    if (!infos) {
+    if (!dirigente) {
         return (
             <main className="min-h-screen w-full bg-[#7CEFC4] px-6 py-10 sm:px-12 sm:py-14">
                 <div className="mx-auto max-w-5xl">
@@ -98,6 +157,8 @@ export default function DirigenteCulturaPage() {
             </main>
         );
     }
+
+
 
     return (
         <main className="min-h-screen w-full bg-[#7CEFC4] px-6 py-10 sm:px-12 sm:py-14 max-h-screen">
@@ -122,40 +183,36 @@ export default function DirigenteCulturaPage() {
                         </p>
                     </div>
 
-                    {dirigente.urlOficial && (
+                    {dirigente.url && (
                         <a
-                            href={dirigente.urlOficial}
+                            href={dirigente.url}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="block break-words text-sm text-blue-800 underline underline-offset-2 hover:text-blue-900 sm:text-right sm:text-base"
                         >
-                            {dirigente.urlOficial}
+                            {dirigente.url}
                         </a>
                     )}
                 </header>
 
+                <div className="mt-6 w-full grid grid-cols-3 gap-6 sm:gap-8 items-center">
 
-                <div className="mt-6 w-full grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8">
-                    {/* Imagens do município (até duas) */}
-                    {imagens.length > 0 && (
-                        <section
-                            className={`mt-10  "
-                                }`}
-                        >
-                            <div
-                                className="relative aspect-[4/3] w-full overflow-hidden rounded-md shadow-sm ring-1 ring-black/10"
-                            >
+                    {/* Esquerda */}
+                    {num_imagens > 0 ? (
+                        <section>
+                            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md shadow-sm ring-1 ring-black/10">
                                 <img
-                                    src={imagens[0]}
-                                    alt={`imagem2`}
+                                    src={dirigente.imagensCidade?.[0] ?? ""}
                                     className="h-full w-full object-cover"
                                 />
                             </div>
                         </section>
+                    ) : (
+                        <div />
                     )}
 
-                    {/* Foto do titular */}
-                    <section className="mt-6 flex flex-col items-center">
+                    {/* Centro */}
+                    <section className="flex flex-col items-center">
                         <div className="relative h-40 w-40 overflow-hidden rounded-md bg-neutral-200 ring-1 ring-black/10 sm:h-48 sm:w-48">
                             {dirigente.foto ? (
                                 <img
@@ -164,33 +221,31 @@ export default function DirigenteCulturaPage() {
                                     className="h-full w-full object-cover"
                                 />
                             ) : (
-                                <div className="flex h-full w-full items-center justify-center text-sm text-neutral-500">
+                                <div className="flex h-full w-full items-center justify-center">
                                     Sem foto
                                 </div>
                             )}
                         </div>
 
-                        <p className="mt-5 text-2xl font-semibold text-neutral-950 sm:text-3xl">
+                        <p className="mt-5 text-2xl font-semibold">
                             {dirigente.nome}
                         </p>
                     </section>
 
-                    {/* Imagens do município (até duas) */}
-                    {imagens.length > 1 && (
-                        <section
-                            className={`mt-10  `}
-                        >
-                            <div
-                                className="relative aspect-[4/3] w-full overflow-hidden rounded-md shadow-sm ring-1 ring-black/10"
-                            >
+                    {/* Direita */}
+                    {num_imagens > 1 ? (
+                        <section>
+                            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md shadow-sm ring-1 ring-black/10">
                                 <img
-                                    src={imagens[1]}
-                                    alt={`imagem2`}
+                                    src={dirigente.imagensCidade?.[1] ?? ""}
                                     className="h-full w-full object-cover"
                                 />
                             </div>
                         </section>
+                    ) : (
+                        <div />
                     )}
+
                 </div>
             </div>
 

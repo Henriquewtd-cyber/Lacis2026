@@ -33,7 +33,32 @@ const CELL_INTERVALS = [10000, 10500, 11500, 11000];
 const FADE_MS = 1000;
 const FALLBACKS = ["#1a3a3a", "#2a3a1a", "#1a3020", "#1a2a3a"];
 
-function NavTag({ label, href }: { label: string; href: string; }) {
+function NavTag({ label, href, ready = true }: { label: string; href: string; ready?: boolean }) {
+
+    if (!ready) {
+        return (
+            <span
+                style={{
+                    display: "inline-block",
+                    background: "#3a3a3a",
+                    color: "#888",
+                    fontWeight: 400,
+                    textTransform: "uppercase",
+                    fontSize: "2rem",
+                    lineHeight: 1,
+                    padding: "0.2rem 0.8rem",
+                    letterSpacing: "-0.03em",
+                    whiteSpace: "nowrap",
+                    fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif",
+                    cursor: "default",
+                    userSelect: "none",
+                }}
+                aria-disabled="true"
+            >
+                {label}
+            </span>
+        );
+    }
 
     return (
         <a
@@ -58,7 +83,6 @@ function NavTag({ label, href }: { label: string; href: string; }) {
         </a>
     );
 }
-
 function RotatingCell({ images, interval, fallback }: { images: Array<{ src: string; alt: string }>; interval: number; fallback: string }) {
     const [index, setIndex] = useState(0);
     const [visible, setVisible] = useState(true);
@@ -160,6 +184,25 @@ export default function Home() {
                     <RotatingCell images={cellImages[3]} interval={CELL_INTERVALS[3]} fallback={FALLBACKS[3]} />
                 </div>
 
+                {/* Aviso "Site em construção" — flutua acima da primeira tag do nav,
+        sem afetar o layout space-evenly do nav em si */}
+                <p
+                    style={{
+                        position: "absolute",
+                        top: "1rem",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        zIndex: 11,
+                        color: "red",
+                        fontSize: "1.5rem",
+                        textAlign: "center",
+                        margin: 0,
+                        whiteSpace: "nowrap",
+                    }}
+                >
+                    Site em construção!
+                </p>
+
                 {/* Nav overlay */}
                 <nav
                     style={{
@@ -174,10 +217,10 @@ export default function Home() {
                     }}
                 >
                     <NavTag label="SOBRE O LACIS" href="sobre" />
-                    <NavTag label="AGENDA" href="" />
-                    <NavTag label="CURSOS DE EXTENSÃO" href="" />
-                    <NavTag label="TEXTOS" href="" />
-                    <NavTag label="PESQUISAS" href="" />
+                    <NavTag label="AGENDA" href="" ready={false} />
+                    <NavTag label="CURSOS DE EXTENSÃO" href="" ready={false} />
+                    <NavTag label="TEXTOS" href="" ready={false} />
+                    <NavTag label="PESQUISAS" href="" ready={false} />
                     <NavTag label="DIRIGENTES DE CULTURA BRASIL" href="dirigentes-de-cultura" />
                 </nav>
 
@@ -197,9 +240,7 @@ export default function Home() {
                     gap: "4rem",
                 }}
             >
-                <p style={{ color: "red", fontSize: "1.5rem", textAlign: "center" }}>
-                    Site em construção!
-                </p>
+
                 <div style={{ width: "91.666%", display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" }}>
                     <h2
                         style={{

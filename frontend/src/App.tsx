@@ -5,6 +5,8 @@ import Estados from "./pages/dirigentes";
 import Cidades from "./pages/cidades";
 import Sobre from "./pages/sobre";
 import DirigenteCulturaPage from "./pages/info";
+import CidadeForm from "./pages/private/cidadesForm";
+import ImportarCidades from "./pages/private/importarForm";
 
 export default function App() {
   return (
@@ -14,6 +16,9 @@ export default function App() {
       <Route path="/dirigentes-de-cultura/:uf" element={<Cidades />} />
       <Route path="/dirigentes-de-cultura/:uf/:cidade" element={<DirigenteCulturaPage />} />
       <Route path="/sobre" element={<Sobre />} />
+      <Route path="/adm_cidades" element={<CidadeForm />} />
+      <Route path="/adm_cidades/importar" element={<ImportarCidades />} />
+
     </Routes>
   );
 }
