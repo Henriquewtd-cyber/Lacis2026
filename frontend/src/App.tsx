@@ -1,9 +1,10 @@
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
+
 import Home from "./pages/home";
-import Estados from "./pages/info";
+import Estados from "./pages/estados";
 import Cidades from "./pages/cidades";
-import DirigenteCulturaPage from "./pages/dirigentes";
+import DirigenteCulturaPage from "./pages/info";
 import Sobre from "./pages/sobre";
 import AdminHome from "./pages/admin/adminHome";
 import CidadeForm from "./pages/admin/cidadesForm";
@@ -14,8 +15,8 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/dirigentes-de-cultura" element={<Estados />} />
-      <Route path="/dirigentes-de-cultura/:uf" element={<Cidades />} />
+      <Route path="/dirigentes-de-cultura" element={< Estados />} />
+      <Route path="/dirigentes-de-cultura/:uf" element={< Cidades />} />
       <Route
         path="/dirigentes-de-cultura/:uf/:cidade"
         element={<DirigenteCulturaPage />}

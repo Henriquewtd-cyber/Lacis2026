@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 
-const API_URL = import.meta.env.VITE_API_URL + "/cidades";
+const API_URL = import.meta.env.VITE_API_BASE_URL + "/api/cidades";
 const API_BASE = import.meta.env.VITE_STORAGE_URL;
 
 
