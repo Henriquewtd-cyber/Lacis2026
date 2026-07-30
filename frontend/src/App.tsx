@@ -1,12 +1,14 @@
 import { Routes, Route } from "react-router-dom";
-
+import ProtectedRoute from "./ProtectedRoute";
 import Home from "./pages/home";
-import Estados from "./pages/dirigentes";
+import Estados from "./pages/info";
 import Cidades from "./pages/cidades";
+import DirigenteCulturaPage from "./pages/dirigentes";
 import Sobre from "./pages/sobre";
-import DirigenteCulturaPage from "./pages/info";
-import CidadeForm from "./pages/private/cidadesForm";
-import ImportarCidades from "./pages/private/importarForm";
+import AdminHome from "./pages/admin/adminHome";
+import CidadeForm from "./pages/admin/cidadesForm";
+import ImportarCidades from "./pages/admin/importarForm";
+import Login from "./pages/admin/login";
 
 export default function App() {
   return (
@@ -14,11 +16,25 @@ export default function App() {
       <Route path="/" element={<Home />} />
       <Route path="/dirigentes-de-cultura" element={<Estados />} />
       <Route path="/dirigentes-de-cultura/:uf" element={<Cidades />} />
-      <Route path="/dirigentes-de-cultura/:uf/:cidade" element={<DirigenteCulturaPage />} />
+      <Route
+        path="/dirigentes-de-cultura/:uf/:cidade"
+        element={<DirigenteCulturaPage />}
+      />
       <Route path="/sobre" element={<Sobre />} />
-      <Route path="/adm_cidades" element={<CidadeForm />} />
-      <Route path="/adm_cidades/importar" element={<ImportarCidades />} />
 
+      <Route path="/admin/login" element={<Login />} />
+
+      <Route element={<ProtectedRoute />}>
+        <Route path="/admin" element={<AdminHome />} />
+        <Route
+          path="/admin/adicionar-manualmente"
+          element={<CidadeForm />}
+        />
+        <Route
+          path="/admin/importar-arquivo"
+          element={<ImportarCidades />}
+        />
+      </Route>
     </Routes>
   );
 }

@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import Navbar from "../../components/navbar";
+import { useNavigate } from "react-router";
 
-const API_BASE = "http://127.0.0.1:8000/api/cidades";
-const STORAGE_BASE = "http://127.0.0.1:8000/storage/";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+const STORAGE_BASE = `${import.meta.env.VITE_STORAGE_URL}/storage`;
 const MAX_DIM = 2000;
 
 const CAMPOS_INICIAIS = {
@@ -61,6 +63,7 @@ export default function CidadeForm() {
     const [carregando, setCarregando] = useState(false);
     const [buscando, setBuscando] = useState(false);
     const [imagemAmpliada, setImagemAmpliada] = useState<{ url: string; label: string } | null>(null);
+    const navigate = useNavigate();
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         const { name, value } = e.target;
@@ -118,9 +121,13 @@ export default function CidadeForm() {
                 estado: buscaEstado.toUpperCase(),
                 nome_cidade: buscaNome,
             });
-            const res = await fetch(`${API_BASE}?${params.toString()}`, {
+            const res = await fetch(`${API_BASE}/api/cidades?${params.toString()}`, {
                 method: "GET",
-                headers: { Accept: "application/json" },
+                headers: {
+                    Accept: "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+                },
+                credentials: "include", // necessário para o navegador
             });
             if (!res.ok) throw new Error(`Cidade não encontrada (HTTP ${res.status})`);
             const data = await res.json();
@@ -171,11 +178,20 @@ export default function CidadeForm() {
                 formData.append("_method", "PUT");
             }
 
-            const res = await fetch(API_BASE, {
+            const res = await fetch(`${API_BASE}/api/cidades`, {
                 method: "POST",
-                headers: { Accept: "application/json" },
                 body: formData,
+                credentials: "include", // necessário para o navegador
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+                    Accept: "application/json",
+                },
             });
+
+            if (res.status === 401) {
+                // token ausente/expirado — manda de volta pro login
+                navigate("/admin/login");
+            }
 
             if (!res.ok) {
                 const erro = await res.json().catch(() => null);
@@ -218,178 +234,180 @@ export default function CidadeForm() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 py-10 px-4">
-            <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-                <h1 className="text-xl font-semibold text-gray-900 mb-1">Cadastro de cidades</h1>
-                <p className="text-sm text-gray-500 mb-6">
-                    Preencha os dados para criar uma nova cidade ou busque uma existente para editar.
-                </p>
-
-                <div className="flex gap-2 mb-6">
-                    <button
-                        type="button"
-                        onClick={() => trocarModo("criar")}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium border ${modo === "criar"
-                            ? "bg-gray-900 text-white border-gray-900"
-                            : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                            }`}
-                    >
-                        Criar nova
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => trocarModo("editar")}
-                        className={`px-4 py-2 rounded-lg text-sm font-medium border ${modo === "editar"
-                            ? "bg-gray-900 text-white border-gray-900"
-                            : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                            }`}
-                    >
-                        Editar existente
-                    </button>
-                </div>
-
-                {modo === "editar" && (
-                    <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                        <p className="text-sm font-medium text-gray-700 mb-3">
-                            Buscar cidade por estado e nome
-                        </p>
-                        <div className="flex gap-2">
-                            <input
-                                type="text"
-                                placeholder="UF (ex: SP)"
-                                value={buscaEstado}
-                                onChange={(e) => setBuscaEstado(e.target.value.toUpperCase().slice(0, 2))}
-                                maxLength={2}
-                                className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase focus:outline-none focus:ring-2 focus:ring-gray-900"
-                            />
-                            <input
-                                type="text"
-                                placeholder="nome da cidade"
-                                value={buscaNome}
-                                onChange={(e) => setBuscaNome(e.target.value)}
-                                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
-                            />
-                            <button
-                                type="button"
-                                onClick={buscarCidade}
-                                disabled={buscando}
-                                className="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
-                            >
-                                {buscando ? "Buscando..." : "Buscar"}
-                            </button>
-                        </div>
-                    </div>
-                )}
-
-                {status && (
-                    <div
-                        className={`mb-6 px-4 py-3 rounded-lg text-sm ${status.tipo === "ok"
-                            ? "bg-green-50 text-green-800 border border-green-200"
-                            : "bg-red-50 text-red-800 border border-red-200"
-                            }`}
-                    >
-                        {status.msg}
-                    </div>
-                )}
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                        <Campo
-                            label="Nome da cidade"
-                            name="nome_cidade"
-                            value={form.nome_cidade}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <Campo
-                            label="Estado (UF)"
-                            name="estado"
-                            value={form.estado}
-                            onChange={handleChange}
-                            maxLength={2}
-                            required
-                            disabled={modo === "editar"}
-                        />
-                        <Campo
-                            label="Nome do órgão"
-                            name="nome_orgao"
-                            value={form.nome_orgao}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <Campo
-                            label="Nome do secretário"
-                            name="nome_secretario"
-                            value={form.nome_secretario}
-                            onChange={handleChange}
-                            required
-                        />
-                        <Campo
-                            label="Cargo"
-                            name="cargo"
-                            value={form.cargo}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-
-                    <Campo label="URL" name="url" value={form.url} onChange={handleChange} />
-
-                    <div className="grid grid-cols-3 gap-4">
-                        <CampoFoto
-                            label="Foto perfil"
-                            fotoKey="foto_perfil"
-                            estado={fotos.foto_perfil}
-                            onChange={handleFotoChange}
-                            onRemover={removerFoto}
-                            onAmpliar={setImagemAmpliada}
-                        />
-                        <CampoFoto
-                            label="Foto 1"
-                            fotoKey="foto_1"
-                            estado={fotos.foto_1}
-                            onChange={handleFotoChange}
-                            onRemover={removerFoto}
-                            onAmpliar={setImagemAmpliada}
-                        />
-                        <CampoFoto
-                            label="Foto 2"
-                            fotoKey="foto_2"
-                            estado={fotos.foto_2}
-                            onChange={handleFotoChange}
-                            onRemover={removerFoto}
-                            onAmpliar={setImagemAmpliada}
-                        />
-                    </div>
-                    <p className="text-xs text-gray-400">
-                        Imagens de até {MAX_DIM}x{MAX_DIM}px. Clique numa foto para ver em tamanho maior.
-                        Redimensionamento e conversão para WebP são feitos no backend.
+        <>
+            <Navbar />
+            <div className="min-h-screen bg-gray-50 py-10 px-4">
+                <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h1 className="text-xl font-semibold text-gray-900 mb-1">Cadastro de cidades</h1>
+                    <p className="text-sm text-gray-500 mb-6">
+                        Preencha os dados para criar uma nova cidade ou busque uma existente para editar.
                     </p>
 
-                    <button
-                        type="submit"
-                        disabled={carregando}
-                        className="w-full mt-2 py-2.5 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
-                    >
-                        {carregando ? "Salvando..." : modo === "criar" ? "Criar cidade" : "Salvar alterações"}
-                    </button>
-                </form>
-            </div>
+                    <div className="flex gap-2 mb-6">
+                        <button
+                            type="button"
+                            onClick={() => trocarModo("criar")}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium border ${modo === "criar"
+                                ? "bg-gray-900 text-white border-gray-900"
+                                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                                }`}
+                        >
+                            Criar nova
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => trocarModo("editar")}
+                            className={`px-4 py-2 rounded-lg text-sm font-medium border ${modo === "editar"
+                                ? "bg-gray-900 text-white border-gray-900"
+                                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                                }`}
+                        >
+                            Editar existente
+                        </button>
+                    </div>
 
-            {imagemAmpliada && (
-                <Lightbox
-                    url={resolveFotoUrl(imagemAmpliada.url)}
-                    label={imagemAmpliada.label}
-                    onClose={() => setImagemAmpliada(null)}
-                />
-            )}
-        </div>
+                    {modo === "editar" && (
+                        <div className="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                            <p className="text-sm font-medium text-gray-700 mb-3">
+                                Buscar cidade por estado e nome
+                            </p>
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    placeholder="UF (ex: SP)"
+                                    value={buscaEstado}
+                                    onChange={(e) => setBuscaEstado(e.target.value.toUpperCase().slice(0, 2))}
+                                    maxLength={2}
+                                    className="w-24 px-3 py-2 border border-gray-300 rounded-lg text-sm uppercase focus:outline-none focus:ring-2 focus:ring-gray-900"
+                                />
+                                <input
+                                    type="text"
+                                    placeholder="Nome da cidade"
+                                    value={buscaNome}
+                                    onChange={(e) => setBuscaNome(e.target.value)}
+                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={buscarCidade}
+                                    disabled={buscando}
+                                    className="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
+                                >
+                                    {buscando ? "Buscando..." : "Buscar"}
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {status && (
+                        <div
+                            className={`mb-6 px-4 py-3 rounded-lg text-sm ${status.tipo === "ok"
+                                ? "bg-green-50 text-green-800 border border-green-200"
+                                : "bg-red-50 text-red-800 border border-red-200"
+                                }`}
+                        >
+                            {status.msg}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="grid grid-cols-2 gap-4">
+                            <Campo
+                                label="Nome da cidade"
+                                name="nome_cidade"
+                                value={form.nome_cidade}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <Campo
+                                label="Estado (UF)"
+                                name="estado"
+                                value={form.estado}
+                                onChange={handleChange}
+                                maxLength={2}
+                                required
+                                disabled={modo === "editar"}
+                            />
+                            <Campo
+                                label="Nome do órgão"
+                                name="nome_orgao"
+                                value={form.nome_orgao}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <Campo
+                                label="Nome do secretário"
+                                name="nome_secretario"
+                                value={form.nome_secretario}
+                                onChange={handleChange}
+                                required
+                            />
+                            <Campo
+                                label="Cargo"
+                                name="cargo"
+                                value={form.cargo}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+
+                        <Campo label="URL" name="url" value={form.url} onChange={handleChange} />
+
+                        <div className="grid grid-cols-3 gap-4">
+                            <CampoFoto
+                                label="Foto perfil"
+                                fotoKey="foto_perfil"
+                                estado={fotos.foto_perfil}
+                                onChange={handleFotoChange}
+                                onRemover={removerFoto}
+                                onAmpliar={setImagemAmpliada}
+                            />
+                            <CampoFoto
+                                label="Foto 1"
+                                fotoKey="foto_1"
+                                estado={fotos.foto_1}
+                                onChange={handleFotoChange}
+                                onRemover={removerFoto}
+                                onAmpliar={setImagemAmpliada}
+                            />
+                            <CampoFoto
+                                label="Foto 2"
+                                fotoKey="foto_2"
+                                estado={fotos.foto_2}
+                                onChange={handleFotoChange}
+                                onRemover={removerFoto}
+                                onAmpliar={setImagemAmpliada}
+                            />
+                        </div>
+                        <p className="text-xs text-gray-400">
+                            Imagens de até {MAX_DIM}x{MAX_DIM}px. Clique numa foto para ver em tamanho maior.
+                        </p>
+
+                        <button
+                            type="submit"
+                            disabled={carregando}
+                            className="w-full mt-2 py-2.5 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 disabled:opacity-50"
+                        >
+                            {carregando ? "Salvando..." : modo === "criar" ? "Criar cidade" : "Salvar alterações"}
+                        </button>
+                    </form>
+                </div>
+
+                {imagemAmpliada && (
+                    <Lightbox
+                        url={resolveFotoUrl(imagemAmpliada.url)}
+                        label={imagemAmpliada.label}
+                        onClose={() => setImagemAmpliada(null)}
+                    />
+                )}
+            </div>
+        </>
     );
 }
 

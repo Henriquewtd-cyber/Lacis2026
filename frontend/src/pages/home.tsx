@@ -109,6 +109,7 @@ function RotatingCell({ images, interval, fallback }: { images: Array<{ src: str
                 backgroundColor: fallback,
                 opacity: visible ? 1 : 0,
                 transition: `opacity ${FADE_MS * 2}ms linear`,
+                filter: 'brightness(0.65) contrast(1.1) saturate(0.9)',
             }}
             aria-label={images[index].alt}
         />
