@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 
 const members = [
-    { name: "Leonardo de Assis", role: "Coordenador", initials: "IA", photo: "/responsaveis/LeonardodeAssis.jpeg" },
-    { name: "Professor Paletta", role: "Vice-coordenador", initials: "BB", photo: "/responsaveis/Prof.Paletta.jpeg" },
+    { name: "Leonardo de Assis", role: "Coordenador", initials: "IA", photo: "/responsaveis/LeonardodeAssis.webp" },
+    { name: "Eugênio Bussi", role: "Professor Titular", initials: "BB", photo: "/responsaveis/EugenioBussi.webp" },
+    { name: "Luiz Augusto Milanesi", role: "Professor Sênior", initials: "BB", photo: "/responsaveis/LuizMilanesi.webp" },
+    { name: "Professor Paletta", role: "Vice-coordenador", initials: "BB", photo: "/responsaveis/Prof.Paletta.webp" },
 ];
 
 
@@ -194,20 +196,20 @@ export default function Sobre() {
                 </section>
 
                 {/* COLUNA DIREITA — Equipe (verde) */}
-                <aside className="lacis-scroll flex h-full w-[30%] min-w-[340px] flex-shrink-0 flex-col overflow-y-auto bg-[#0c3b2e] pb-10 pl-10 pt-16">
+                <aside className="flex h-screen w-[30%] min-w-[340px] flex-shrink-0 flex-col bg-[#0c3b2e] pb-12 pl-10 pt-16">
                     <div className="mb-8 w-fit flex-shrink-0 rounded bg-black px-4 py-2 text-sm font-extrabold uppercase tracking-widest text-white">
                         Coordenação
                     </div>
-                    <div className="flex flex-col pr-10">
+                    <div className="flex max-h-[100%] flex-col pr-10">
                         {members.map((m) => (
                             <div
                                 key={m.name}
-                                className="flex items-center gap-6 border-b border-[#163828] py-8 last:border-b-0"
+                                className="flex items-center gap-2 border-b border-[#163828] py-5 last:border-b-0"
                             >
                                 <img
                                     src={m.photo}
                                     alt={m.name}
-                                    className="h-28 w-28 flex-shrink-0 border border-[#2a5c41] bg-[#163828] object-cover"
+                                    className="h-24 w-24 flex-shrink-0 border border-[#2a5c41] bg-[#163828] object-cover"
                                 />
                                 <div>
                                     <div className="text-xl font-bold text-white">{m.name}</div>

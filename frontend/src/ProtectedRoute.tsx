@@ -1,11 +1,17 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { tokenValido } from "./auth";
+import { useEffect } from "react";
 
 export default function ProtectedRoute() {
-    const token = localStorage.getItem("token");
+    const navigate = useNavigate();
 
-    if (!token) {
-        return <Navigate to="/admin/login" replace />;
-    }
+    useEffect(() => {
+        if (!tokenValido()) {
+            navigate("/admin/login");
+        }
+    }, [navigate]);
+
 
     return <Outlet />;
 }

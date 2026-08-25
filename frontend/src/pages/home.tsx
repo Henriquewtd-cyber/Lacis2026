@@ -77,10 +77,11 @@ function NavTag({ label, href, ready = true }: { label: string; href: string; re
                 transition: "color 0.15s ease, box-shadow 0.15s ease",
                 whiteSpace: "nowrap",
                 fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif",
-            }}
+            }
+            }
         >
             {label}
-        </a>
+        </a >
     );
 }
 function RotatingCell({ images, interval, fallback }: { images: Array<{ src: string; alt: string }>; interval: number; fallback: string }) {
@@ -116,7 +117,67 @@ function RotatingCell({ images, interval, fallback }: { images: Array<{ src: str
     );
 }
 
+// ══════════ Modal "O QUE É" ══════════
+function OQueEModal({ onClose }: { onClose: () => void }) {
+    return (
+        <div
+            onClick={onClose}
+            style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(0,0,0,0.6)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 100,
+            }}
+        >
+            <div
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                    position: "relative",
+                    background: "#0c3b2e",
+                    color: "#fff",
+                    width: "90%",
+                    maxWidth: 480,
+                    padding: "2rem",
+                    borderRadius: 8,
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
+                }}
+            >
+                <button
+                    onClick={onClose}
+                    aria-label="Fechar"
+                    style={{
+                        position: "absolute",
+                        top: "0.75rem",
+                        right: "0.75rem",
+                        background: "transparent",
+                        border: "none",
+                        color: "#fff",
+                        fontSize: "1.5rem",
+                        lineHeight: 1,
+                        cursor: "pointer",
+                    }}
+                >
+                    ×
+                </button>
+
+                <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem", fontWeight: 700 }}>
+                    O QUE É
+                </h3>
+
+                <p style={{ margin: 0, fontSize: "1rem", lineHeight: 1.6 }}>
+                    Anualmente, o LACIS promove um Encontro com os dirigentes municipais de Cultura, os seus interlocutores mais qualificados, com os quais concretiza os seus objetivos centrais. A cada Encontro são expostos e debatidos temas de políticas culturais relevantes para o bom desempenho das instituições e fortalecimento da cultura das cidades. O Encontro de 2026 será realizado pós-eleições, na segunda semana de novembro, quando o cenário político-administrativo estará definido. Informações serão enviadas às prefeituras e reproduzidas aqui.
+                </p>
+            </div>
+        </div>
+    );
+}
+
 export default function Home() {
+    const [showModal, setShowModal] = useState(false);
+
     return (
         <main
             style={{
@@ -247,26 +308,27 @@ export default function Home() {
                         style={{
                             color: "#fff", fontWeight: 900, fontSize: "1.5rem",
                             textTransform: "uppercase", letterSpacing: "0.15em",
-                            lineHeight: 1.2, margin: 0, textAlign: "center",
+                            lineHeight: 1.1, margin: 0, textAlign: "center",
                         }}
                     >
-                        ENCONTRO DE AGOSTO
+                        ENCONTRO DE DIRIGENTES MUNICIPAIS DE CULTURA NA USP
                     </h2>
 
-                    <img src="/evento1.webp" alt="Event photo" width={600} height={500} />
+                    <img src="/auditorio-each.jpg" alt="Event photo" width={600} height={500} />
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
 
                     <a
                         href="#sobre"
+                        onClick={(e) => { e.preventDefault(); setShowModal(true); }}
                         style={{ color: "#fff", fontWeight: 500, fontSize: 24, lineHeight: 1.4, textDecoration: "none", textAlign: "center" }}
                         onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#a8e6cf")}
                         onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#fff")}
                     >
                         O QUE É
                     </a>
-                    <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 20 }}>/</span>
+                    {/* <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 20 }}>/</span>
 
                     <a
                         href="#inscricoes"
@@ -275,9 +337,13 @@ export default function Home() {
                         onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#fff")}
                     >
                         INSCRIÇÕES
-                    </a>
+                    </a> */}
                 </div>
             </aside >
+
+            {
+                showModal && <OQueEModal onClose={() => setShowModal(false)} />
+            }
         </main >
     );
 }

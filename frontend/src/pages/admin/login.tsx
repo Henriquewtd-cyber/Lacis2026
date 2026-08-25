@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { salvarSessao } from "../../auth";
 import Navbar from "../../components/navbar";
 
 interface LoginProps {
@@ -19,7 +20,7 @@ export default function Login({ onSubmit }: LoginProps) {
         setCarregando(true);
 
         try {
-            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/login`, {
+            const res = await fetch("/api/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name: nome, password: senha }),
@@ -32,11 +33,11 @@ export default function Login({ onSubmit }: LoginProps) {
                 return;
             }
 
-            localStorage.setItem("token", data.token);
+            salvarSessao(data.token, data.expires_at);
             onSubmit?.(nome, senha);
             navigate("/admin");
-        } catch (error: any) {
-            setErro(error.message || "Ocorreu um erro ao tentar fazer login.");
+        } catch {
+            setErro("Não foi possível conectar ao servidor.");
         } finally {
             setCarregando(false);
         }
@@ -45,6 +46,7 @@ export default function Login({ onSubmit }: LoginProps) {
     return (
         <>
             <Navbar />
+
             <div className="min-h-screen flex items-center justify-center bg-slate-100 px-4">
                 <form
                     onSubmit={handleSubmit}

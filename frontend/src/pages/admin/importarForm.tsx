@@ -226,7 +226,7 @@ export default function ImportarCidades() {
                             </div>
                             <div className="rounded-md bg-blue-50 px-3 py-2 text-center">
                                 <p className="text-lg font-semibold text-blue-700">
-                                    {resultado.ignoradas}
+                                    {resultado.ignoradas ?? 0}
                                 </p>
                                 <p className="text-xs text-blue-600">Ignoradas</p>
                             </div>
