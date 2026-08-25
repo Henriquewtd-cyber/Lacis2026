@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 
 const members = [
     { name: "Leonardo de Assis", role: "Coordenador", initials: "IA", photo: "/responsaveis/LeonardodeAssis.webp" },
-    { name: "Eugênio Bussi", role: "Professor Titular", initials: "BB", photo: "/responsaveis/EugenioBussi.webp" },
-    { name: "Luiz Augusto Milanesi", role: "Professor Sênior", initials: "BB", photo: "/responsaveis/LuizMilanesi.webp" },
+    { name: "Eugênio Bussi", role: "Professor Titular USP/ECA", initials: "BB", photo: "/responsaveis/EugenioBussi.webp" },
+    { name: "Luiz Augusto Milanesi", role: "Professor Sênior USP/ECA/CBD", initials: "BB", photo: "/responsaveis/LuizMilanesi.webp" },
     { name: "Professor Paletta", role: "Vice-coordenador", initials: "BB", photo: "/responsaveis/Prof.Paletta.webp" },
 ];
 
