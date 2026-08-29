@@ -29,22 +29,31 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $entry = collect(config('admin.users'))->get(strtolower($request->input('name')));
+        $name = $request->input('name');
+        $password = $request->input('password');
 
-        if (! $entry || ! Hash::check($request->input('password'), $entry['password'])) {
+        // Verifica o nome do administrador
+        if (strtolower($name) !== strtolower(env('ADMIN_NAME'))) {
             return response()->json([
                 'message' => 'Nome ou senha incorretos.',
             ], 401);
         }
 
-        $result = $this->tokens->generate($entry['name']);
+        // Verifica a senha usando o hash armazenado no .env
+        if (!Hash::check($password, env('ADMIN_PASSWORD'))) {
+            return response()->json([
+                'message' => 'Nome ou senha incorretos.',
+            ], 401);
+        }
+
+        $result = $this->tokens->generate(env('ADMIN_NAME'));
 
         return response()->json([
             'token' => $result['token'],
             'token_type' => 'Bearer',
             'expires_at' => $result['expires_at']->toIso8601String(),
             'user' => [
-                'name' => $entry['name'],
+                'name' => env('ADMIN_NAME'),
             ],
         ]);
     }

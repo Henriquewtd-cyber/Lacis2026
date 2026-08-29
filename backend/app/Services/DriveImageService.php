@@ -10,9 +10,9 @@ use Illuminate\Support\Str;
 class DriveImageService
 {
     /**
-     * Baixa uma imagem a partir de um link do Google Drive e salva
-     * localmente no disco 'public'. Retorna o path salvo (ex: 'cidades/abc123.jpg')
-     * ou null se não conseguir baixar.
+     * Baixa uma imagem a partir de um link do Google Drive, converte para
+     * WebP e salva localmente no disco 'public'. Retorna o path salvo
+     * (ex: 'cidades/abc123.webp') ou null se não conseguir baixar.
      */
     public static function baixarESalvar(?string $url, string $pasta = 'cidades'): ?string
     {
@@ -56,9 +56,23 @@ class DriveImageService
                 return null;
             }
 
+            $conteudoWebp = self::converterParaWebp($conteudo, $contentType);
+
+            if ($conteudoWebp !== null) {
+                $nomeArquivo = $pasta . '/' . Str::uuid() . '.webp';
+                Storage::disk('public')->put($nomeArquivo, $conteudoWebp);
+                return $nomeArquivo;
+            }
+
+            // Fallback: conversão falhou (GD sem suporte, formato exótico, etc.)
+            // — salva a imagem original pra não perder o dado.
+            Log::warning('DriveImageService: falha ao converter para WebP, salvando original', [
+                'url_original' => $url,
+                'content_type' => $contentType,
+            ]);
+
             $extensao = self::extensaoPorMime($contentType);
             $nomeArquivo = $pasta . '/' . Str::uuid() . '.' . $extensao;
-
             Storage::disk('public')->put($nomeArquivo, $conteudo);
 
             return $nomeArquivo;
@@ -71,6 +85,45 @@ class DriveImageService
             ]);
             return null;
         }
+    }
+
+    /**
+     * Converte o conteúdo binário de uma imagem (png/jpg/gif/bmp/webp) para
+     * WebP usando a extensão GD. Retorna os bytes do WebP gerado, ou null
+     * se não for possível decodificar/gerar (ex: GD sem suporte a WebP).
+     */
+    private static function converterParaWebp(string $conteudo, string $contentType): ?string
+    {
+        if (!function_exists('imagewebp')) {
+            return null;
+        }
+
+        // Já é WebP — não precisa reprocessar.
+        if ($contentType === 'image/webp') {
+            return $conteudo;
+        }
+
+        $imagem = @imagecreatefromstring($conteudo);
+
+        if (!$imagem) {
+            return null;
+        }
+
+        // Preserva transparência (relevante para PNG)
+        imagepalettetotruecolor($imagem);
+        imagealphablending($imagem, true);
+        imagesavealpha($imagem, true);
+
+        $sucesso = false;
+        ob_start();
+        try {
+            $sucesso = imagewebp($imagem, null, 82); // qualidade 82
+            $bytes = ob_get_clean();
+        } finally {
+            imagedestroy($imagem);
+        }
+
+        return $sucesso ? $bytes : null;
     }
 
     private static function extractId(string $url): ?string
