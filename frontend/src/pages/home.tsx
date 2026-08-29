@@ -314,7 +314,7 @@ export default function Home() {
                         ENCONTRO DE DIRIGENTES MUNICIPAIS DE CULTURA NA USP
                     </h2>
 
-                    <img src="/auditorio-each.jpg" alt="Event photo" width={600} height={500} />
+                    <img src="/auditorio-each.webp" alt="Event photo" width={600} height={500} />
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
