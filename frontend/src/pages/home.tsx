@@ -139,7 +139,7 @@ function OQueEModal({ onClose }: { onClose: () => void }) {
                     background: "#0c3b2e",
                     color: "#fff",
                     width: "90%",
-                    maxWidth: 480,
+                    maxWidth: 580,
                     padding: "2rem",
                     borderRadius: 8,
                     boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
