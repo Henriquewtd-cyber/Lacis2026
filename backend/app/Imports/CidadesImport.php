@@ -7,8 +7,6 @@ use App\Services\NormalizerService;
 use App\Services\DriveImageService;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-
-
 class CidadesImport
 {
     public int $criadas = 0;
@@ -17,27 +15,16 @@ class CidadesImport
     public array $erros = [];
 
     /**
-     * Colunas que podem trazer o nome do município, em ordem de preferência.
-     * A exportação da Página1 usa "Município".
+     * Cache em memória de todas as cidades já existentes no banco,
+     * indexadas por "ESTADO|nome_simples". Evita 1 SELECT por linha
+     * da planilha — carregamos tudo de uma vez só, antes do loop.
      */
+    private array $cidadesCache = [];
+
     private const CHAVES_CIDADE = ['municipio', 'cidade', 'nome_cidade'];
-
-    /**
-     * Colunas que podem trazer o nome do órgão/secretaria.
-     * A exportação da Página1 usa "Secretaria/Órgão de Cultura".
-     */
     private const CHAVES_ORGAO = ['secretaria_orgao_de_cultura', 'secretaria', 'orgao', 'nome_orgao'];
-
-    /**
-     * Colunas que podem trazer o nome do responsável.
-     * A exportação da Página1 usa "Nome do Responsável".
-     */
     private const CHAVES_SECRETARIO = ['nome_do_responsavel', 'secretario', 'nome_secretario'];
 
-    /**
-     * Mapa campo do banco => possíveis colunas de origem para os links de foto do Drive.
-     * A exportação da Página1 usa "Foto do Responsável", "Imagem 1 (Município)" e "Imagem 2 (Cultura)".
-     */
     private const CHAVES_FOTOS = [
         'foto_perfil' => ['foto_do_responsavel', 'foto_perfil'],
         'foto_1'      => ['imagem_1_municipio', 'foto_1'],
@@ -45,16 +32,17 @@ class CidadesImport
     ];
 
     /**
-     * Coluna que indica se a linha deve ser importada.
-     * "Válido? (s ou n)" normaliza para "valido_s_ou_n".
+     * Mapa campo da foto => campo que guarda o link de origem (Drive),
+     * usado para decidir se é preciso baixar a imagem de novo.
      */
+    private const CHAVES_FOTOS_LINK = [
+        'foto_perfil' => 'foto_perfil_link',
+        'foto_1'      => 'foto_1_link',
+        'foto_2'      => 'foto_2_link',
+    ];
+
     private const CHAVE_VALIDO = 'valido_s_ou_n';
 
-    /**
-     * Importa cidades a partir de um arquivo CSV.
-     *
-     * @param string $caminhoArquivo Caminho completo do arquivo CSV
-     */
     public function importar(string $caminhoArquivo): void
     {
         if (!is_readable($caminhoArquivo)) {
@@ -69,7 +57,10 @@ class CidadesImport
             return;
         }
 
-        // Remove BOM UTF-8, se existir (comum em CSVs exportados pelo Excel)
+        // Carrega todas as cidades existentes de uma vez só (1 query),
+        // em vez de 1 SELECT por linha da planilha.
+        $this->carregarCidadesExistentes();
+
         $bom = fread($handle, 3);
         if ($bom !== "\xEF\xBB\xBF") {
             rewind($handle);
@@ -86,17 +77,15 @@ class CidadesImport
 
         $cabecalho = array_map(fn ($col) => $this->normalizarChave($col), $cabecalho);
 
-        $numeroLinha = 1; // linha 1 = primeira linha de dados (após o cabeçalho)
+        $numeroLinha = 1;
 
         while (($colunas = fgetcsv($handle, 0, $delimitador)) !== false) {
             $numeroLinha++;
 
-            // Ignora linhas totalmente vazias
             if (count($colunas) === 1 && trim((string) $colunas[0]) === '') {
                 continue;
             }
 
-            // Corrige linhas com número de colunas diferente do cabeçalho
             if (count($colunas) < count($cabecalho)) {
                 $colunas = array_pad($colunas, count($cabecalho), null);
             }
@@ -110,6 +99,17 @@ class CidadesImport
         }
 
         fclose($handle);
+    }
+
+    /**
+     * Carrega todas as cidades do banco de uma vez, indexadas por
+     * "ESTADO|nome_simples", para lookup em memória (O(1)) dentro do loop.
+     */
+    private function carregarCidadesExistentes(): void
+    {
+        $this->cidadesCache = Cidade::all()
+            ->keyBy(fn ($c) => $c->estado . '|' . $c->nome_simples)
+            ->all();
     }
 
     private function processarLinha(array $linha, int $numeroLinha): void
@@ -146,10 +146,10 @@ class CidadesImport
             }
 
             $nomeSimples = NormalizerService::cidade($nomeCidade);
+            $chaveCache = $estado . '|' . $nomeSimples;
 
-            $cidade = Cidade::where('estado', $estado)
-                ->where('nome_simples', $nomeSimples)
-                ->first();
+            // Lookup em memória em vez de query no banco.
+            $cidade = $this->cidadesCache[$chaveCache] ?? null;
 
             $dados = [
                 'nome_cidade'     => $nomeCidade,
@@ -168,35 +168,43 @@ class CidadesImport
                     continue;
                 }
 
+                $campoLink = self::CHAVES_FOTOS_LINK[$campo];
+
+                // Se o link da planilha é igual ao que já está salvo,
+                // a imagem não mudou — pula o download.
+                if ($cidade && $cidade->$campoLink === $linkDrive) {
+                    continue;
+                }
+
                 $path = DriveImageService::baixarESalvar($linkDrive);
 
                 if ($path) {
                     $dados[$campo] = $path;
+                    $dados[$campoLink] = $linkDrive;
                 } else {
                     $this->erros[] = "Linha {$numeroLinha}: falha ao baixar {$campo}";
                 }
             }
 
-            // Sanitiza tudo antes de bater no banco — rede de segurança
-            // contra qualquer byte inválido que tenha passado despercebido
-            // (planilha, resposta do Drive, etc.).
             $dados = $this->sanitizarArray($dados);
 
             if ($cidade) {
                 $cidade->update($dados);
                 $this->atualizadas++;
             } else {
-                Cidade::create($dados);
+                $cidade = Cidade::create($dados);
                 $this->criadas++;
             }
+
+            // Atualiza o cache em memória — evita duplicar caso a
+            // mesma cidade apareça mais de uma vez na planilha.
+            $this->cidadesCache[$chaveCache] = $cidade;
         } catch (\Throwable $e) {
-            // paraUtf8 aqui evita que uma mensagem de exception com bytes
-            // inválidos quebre o json_encode() da resposta final.
             $this->erros[] = "Linha {$numeroLinha}: " . $this->paraUtf8($e->getMessage());
         }
     }
 
-    /**
+     /**
      * Retorna o primeiro valor não vazio dentre as chaves candidatas.
      */
     private function primeiroValor(array $linha, array $chaves): ?string

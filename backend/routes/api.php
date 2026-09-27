@@ -22,4 +22,5 @@ Route::middleware('admin.token')->group(function () {
 
 
 Route::get('/cidades/', [CidadesController::class, 'show']);
+Route::get('/cidades/all', [CidadesController::class, 'getAll']);
 Route::post('/login/', [AuthController::class, 'login']);

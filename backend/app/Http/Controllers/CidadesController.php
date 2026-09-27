@@ -46,6 +46,10 @@ class CidadesController extends Controller
             'foto_perfil' => 'nullable|image',
             'foto_1'      => 'nullable|image',
             'foto_2'      => 'nullable|image',
+
+            'foto_perfil_link' => 'nullable|string',
+            'foto_1_link'      => 'nullable|string',
+            'foto_2_link'      => 'nullable|string',
         ]);
 
         $dados['nome_simples'] = NormalizerService::cidade($dados['nome_cidade']);
@@ -57,6 +61,11 @@ class CidadesController extends Controller
             } else {
                 unset($dados[$campo]);
             }
+
+            $linkCampo = $campo . '_link';
+            $dados[$linkCampo] = $request->filled($linkCampo)
+                ? $request->input($linkCampo)
+                : 'sem-link';
         }
 
         $cidade = Cidade::create($dados);
@@ -89,11 +98,15 @@ class CidadesController extends Controller
             'nome_orgao'      => 'sometimes|string',
             'nome_secretario' => 'sometimes|string',
             'cargo'           => 'sometimes|string',
-            'url'             => 'sometimes|string',
+            'url'             => 'sometimes|nullable|string',
 
             'foto_perfil' => 'nullable|image',
             'foto_1'      => 'nullable|image',
             'foto_2'      => 'nullable|image',
+
+            'foto_perfil_link' => 'sometimes|nullable|string',
+            'foto_1_link'      => 'sometimes|nullable|string',
+            'foto_2_link'      => 'sometimes|nullable|string',
         ]);
 
         if (isset($dados['nome_cidade'])) {
@@ -105,14 +118,33 @@ class CidadesController extends Controller
         }
 
         foreach (['foto_perfil', 'foto_1', 'foto_2'] as $campo) {
+            $linkCampo = $campo . '_link';
+            $removerCampo = $campo . '_remover';
+
             if ($request->hasFile($campo)) {
-                // remove a foto antiga se existir
+                // troca de foto: apaga a antiga do storage antes de salvar a nova
                 if ($cidade->$campo) {
                     Storage::disk('public')->delete($cidade->$campo);
                 }
                 $dados[$campo] = $this->salvarImagemWebp($request->file($campo));
+                $dados[$linkCampo] = $request->filled($linkCampo)
+                    ? $request->input($linkCampo)
+                    : 'sem-link';
+            } elseif ($request->boolean($removerCampo)) {
+                // remoção explícita: apaga o arquivo e zera foto + link
+                if ($cidade->$campo) {
+                    Storage::disk('public')->delete($cidade->$campo);
+                }
+                $dados[$campo] = null;
+                $dados[$linkCampo] = null;
             } else {
+                // nada mudou nessa foto: mantém o que já está salvo
                 unset($dados[$campo]);
+                if ($request->filled($linkCampo)) {
+                    $dados[$linkCampo] = $request->input($linkCampo);
+                } else {
+                    unset($dados[$linkCampo]);
+                }
             }
         }
 
@@ -121,7 +153,6 @@ class CidadesController extends Controller
         return response()->json($cidade);
     }
 
-    // POST /api/cidades/importar
     // POST /api/cidades/importar
     public function import(Request $request)
     {
@@ -211,4 +242,32 @@ class CidadesController extends Controller
 
         return $nomeArquivo;
     }
+    
+    // GET /api/cidades/all?estado=PR
+    public function getAll(Request $request)
+    {
+        $request->validate([
+            'estado' => 'required|string|max:2',
+        ]);
+
+        $estado = strtoupper($request->query('estado'));
+
+        $cidades = Cidade::where('estado', $estado)->get();
+
+        if ($cidades->isEmpty()) {
+            return response()->json([
+                'message' => 'Cidades não encontradas'
+            ], 404);
+        }
+
+        $respostas = $cidades->map(function ($cidade) {
+            return [
+                'cidade'     => $cidade->nome_cidade,
+                'id'         => $cidade->id,
+            ];
+        });
+
+        return response()->json($respostas);
+    }
 }
+

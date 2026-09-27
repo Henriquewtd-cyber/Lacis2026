@@ -19,7 +19,9 @@ interface ResultadoImportacao {
 type Status = "idle" | "uploading" | "success" | "error";
 
 const EXTENSOES_ACEITAS = [".xlsx", ".csv"];
-const API_URL = "http://127.0.0.1:8000/api/cidades/importar";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+const API_URL = `${API_BASE}/api/cidades/importar`;
 
 export default function ImportarCidades() {
     const [arquivo, setArquivo] = useState<File | null>(null);

@@ -21,6 +21,11 @@ return new class extends Migration
             $table->string('foto_perfil')->nullable();
             $table->string('foto_1')->nullable();
             $table->string('foto_2')->nullable();
+            
+            $table->string('foto_perfil_link')->nullable();
+            $table->string('foto_1_link')->nullable();
+            $table->string('foto_2_link')->nullable();
+
             $table->timestamps();
 
             $table->unique(['estado', 'nome_simples']);

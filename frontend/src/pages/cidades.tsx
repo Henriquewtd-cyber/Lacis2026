@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import culturaEstados from "../assets/cultura-estados.json";
 
+const API_URL = import.meta.env.VITE_API_BASE_URL + "/api/cidades/all";
 
 type Cidade = {
     id: number;
@@ -44,10 +45,20 @@ const ESTADO_PADRAO: EstadoInfo = {
     linkOficial: "#",
 };
 
+// Normaliza para comparar nomes sem depender de acento/caixa
+function normalizarNome(nome: string) {
+    return nome
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLowerCase();
+}
+
 export default function Cidades() {
     const { uf } = useParams();
 
     const [cidades, setCidades] = useState<Cidade[]>([]);
+    const [municipiosComDados, setMunicipiosComDados] = useState<Set<string>>(new Set());
     const [loading, setLoading] = useState(true);
 
     const ufKey = uf?.toUpperCase() ?? "";
@@ -57,11 +68,19 @@ export default function Cidades() {
         async function buscarCidades() {
             try {
                 setLoading(true);
-                const response = await fetch(
-                    `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${ufKey}/municipios`
+
+                const [resIbge, resDados] = await Promise.all([
+                    fetch(
+                        `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${ufKey}/municipios`
+                    ),
+                    buscarMunicipiosComDados(ufKey),
+                ]);
+
+                const data = await resIbge.json();
+                setCidades(
+                    data.sort((a: Cidade, b: Cidade) => a.nome.localeCompare(b.nome, "pt-BR"))
                 );
-                const data = await response.json();
-                setCidades(data.sort((a: Cidade, b: Cidade) => a.nome.localeCompare(b.nome, "pt-BR")));
+                setMunicipiosComDados(resDados);
             } catch (error) {
                 console.error("Erro ao buscar cidades:", error);
             } finally {
@@ -70,6 +89,31 @@ export default function Cidades() {
         }
         buscarCidades();
     }, [ufKey]);
+
+    async function buscarMunicipiosComDados(estado: string): Promise<Set<string>> {
+        try {
+
+            if (!estado) {
+                throw new Error("Parâmetro de estado não fornecido");
+            }
+
+            const new_params = new URLSearchParams({ estado });
+            const res = await fetch(`${API_URL}?${new_params.toString()}`, {
+                method: "GET",
+                headers: { Accept: "application/json" },
+            });
+
+            if (!res.ok) return new Set();
+
+            const json = await res.json();
+            // ajuste "nome" para o campo correto retornado pela sua API
+            const nomes: string[] = json.map((item: any) => item.cidade);
+            return new Set(nomes.map(normalizarNome));
+        } catch (error) {
+            console.error("Erro ao buscar municípios com dados:", error);
+            return new Set();
+        }
+    }
 
     return (
         <div
@@ -91,7 +135,6 @@ export default function Cidades() {
                     flexWrap: "wrap",
                 }}
             >
-                {/* Bandeira do estado */}
                 <img
                     src={estado.bandeiraUrl}
                     alt={`Bandeira de ${estado.nomeEstado}`}
@@ -103,7 +146,6 @@ export default function Cidades() {
                     }}
                 />
 
-                {/* Bloco escuro com nome do estado / secretaria / secretário */}
                 <div
                     style={{
                         background: "#15155C",
@@ -136,7 +178,6 @@ export default function Cidades() {
                     </p>
                 </div>
 
-                {/* Foto do secretário */}
                 <img
                     src={estado.fotoUrl}
                     alt={`Foto do(a) secretário(a) de ${estado.nomeEstado}`}
@@ -148,7 +189,6 @@ export default function Cidades() {
                     }}
                 />
 
-                {/* Link oficial */}
                 <a
                     href={estado.linkOficial}
                     target="_blank"
@@ -166,7 +206,6 @@ export default function Cidades() {
                 >
                     {estado.linkOficial}
                 </a>
-
             </header>
 
             {/* ── Lista de municípios ── */}
@@ -203,27 +242,82 @@ export default function Cidades() {
                             columnGap: 32,
                         }}
                     >
-                        {cidades.map((cidade) => (
-                            <div
-                                key={cidade.id}
-                                style={{
-                                    color: "#FFFF66",
-                                    fontSize: 22,
-                                    padding: "3px 0",
-                                    breakInside: "avoid",
-                                }}
-                            >
-                                <Link
-                                    to={`/dirigentes-de-cultura/${uf}/${cidade.nome}`}
-                                    style={{ color: "inherit", textDecoration: "none" }}
+                        {cidades.map((cidade) => {
+                            const temDados = municipiosComDados.has(normalizarNome(cidade.nome));
+
+                            if (!temDados) {
+                                return (
+                                    <div
+                                        key={cidade.id}
+                                        title="Sem informações cadastradas"
+                                        style={{
+                                            color: "#8A8AA0",
+                                            fontSize: 22,
+                                            padding: "3px 0",
+                                            breakInside: "avoid",
+                                            cursor: "not-allowed",
+                                        }}
+                                    >
+                                        {cidade.nome}
+                                    </div>
+                                );
+                            }
+
+                            return (
+                                <div
+                                    key={cidade.id}
+                                    style={{
+                                        color: "#FFFF66",
+                                        fontSize: 22,
+                                        padding: "3px 0",
+                                        breakInside: "avoid",
+                                    }}
                                 >
-                                    {cidade.nome}
-                                </Link>
-                            </div>
-                        ))}
+                                    <Link
+                                        to={`/dirigentes-de-cultura/${uf}/${cidade.nome}`}
+                                        style={{ color: "inherit", textDecoration: "none" }}
+                                    >
+                                        {cidade.nome}
+                                    </Link>
+                                </div>
+                            );
+                        })}
                     </div>
                 )}
+                <div
+                    style={{
+                        marginTop: 48,
+                        paddingTop: 20,
+                        borderTop: "1px solid rgba(255, 255, 255, 0.2)",
+                        color: "#C8C8D8",
+                        fontSize: 15,
+                        lineHeight: 1.6,
+                    }}
+                >
+                    <p style={{ margin: "0 0 8px" }}>
+                        <strong>Aviso:</strong> A coleta e atualização dos dados dos
+                        municípios ainda está em andamento. Por isso, algumas
+                        informações podem não estar disponíveis no momento.
+                    </p>
+
+                    <p style={{ margin: 0 }}>
+                        Se você acredita que determinado município deveria estar
+                        presente ou possui informações que possam contribuir para
+                        este levantamento, entre em contato pelo e-mail{" "}
+                        <a
+                            href="mailto:lacis@usp.br"
+                            style={{
+                                color: "#FFD23F",
+                                fontWeight: 700,
+                                textDecoration: "underline",
+                            }}
+                        >
+                            lacis@usp.br
+                        </a>
+                        .
+                    </p>
+                </div>
             </main>
-        </div>
+        </div >
     );
 }

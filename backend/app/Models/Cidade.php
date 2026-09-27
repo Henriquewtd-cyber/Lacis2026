@@ -9,15 +9,18 @@ class Cidade extends Model
     protected $table = 'cidades';
 
     protected $fillable = [
-        'nome_cidade',
-        'nome_simples',
-        'estado',
-        'cargo',
-        'nome_orgao',
-        'nome_secretario',
-        'url',
-        'foto_perfil',
-        'foto_1',
-        'foto_2',
-    ];
+    'nome_cidade',
+    'nome_simples',
+    'estado',
+    'cargo',
+    'nome_orgao',
+    'nome_secretario',
+    'url',
+    'foto_perfil',
+    'foto_perfil_link',
+    'foto_1',
+    'foto_1_link',
+    'foto_2',
+    'foto_2_link',
+];
 }

@@ -3,7 +3,7 @@ import Navbar from "../../components/navbar";
 import { useNavigate } from "react-router";
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
-const STORAGE_BASE = `${import.meta.env.VITE_STORAGE_URL}/storage`;
+const STORAGE_BASE = `${import.meta.env.VITE_STORAGE_URL}/storage/`;
 const MAX_DIM = 2000;
 
 const CAMPOS_INICIAIS = {
@@ -22,12 +22,13 @@ type FotoKey = "foto_perfil" | "foto_1" | "foto_2";
 type FotoState = {
     file: File | null;
     preview: string | null; // preview local (blob:) ou path/URL vindo do backend
+    removida: boolean; // true = usuário removeu uma foto que já existia no servidor
 };
 
 const FOTOS_INICIAIS: Record<FotoKey, FotoState> = {
-    foto_perfil: { file: null, preview: null },
-    foto_1: { file: null, preview: null },
-    foto_2: { file: null, preview: null },
+    foto_perfil: { file: null, preview: null, removida: false },
+    foto_1: { file: null, preview: null, removida: false },
+    foto_2: { file: null, preview: null, removida: false },
 };
 
 // previews locais (blob:) e URLs completas (http) são usados como estão;
@@ -96,7 +97,7 @@ export default function CidadeForm() {
 
             setFotos((prev) => ({
                 ...prev,
-                [key]: { file, preview: URL.createObjectURL(file) },
+                [key]: { file, preview: URL.createObjectURL(file), removida: false },
             }));
             setStatus(null);
         } catch (err: any) {
@@ -106,7 +107,15 @@ export default function CidadeForm() {
     }
 
     function removerFoto(key: FotoKey) {
-        setFotos((prev) => ({ ...prev, [key]: { file: null, preview: null } }));
+        setFotos((prev) => {
+            const atual = prev[key];
+            // só marca "removida" se o preview era do servidor (não um blob: de arquivo novo)
+            const eraDoServidor = atual.preview !== null && !atual.preview.startsWith("blob:");
+            return {
+                ...prev,
+                [key]: { file: null, preview: null, removida: eraDoServidor },
+            };
+        });
     }
 
     async function buscarCidade() {
@@ -143,9 +152,9 @@ export default function CidadeForm() {
             });
 
             setFotos({
-                foto_perfil: { file: null, preview: cidade.foto_perfil ?? null },
-                foto_1: { file: null, preview: cidade.foto_1 ?? null },
-                foto_2: { file: null, preview: cidade.foto_2 ?? null },
+                foto_perfil: { file: null, preview: cidade.foto_perfil ?? null, removida: false },
+                foto_1: { file: null, preview: cidade.foto_1 ?? null, removida: false },
+                foto_2: { file: null, preview: cidade.foto_2 ?? null, removida: false },
             });
 
             setStatus({ tipo: "ok", msg: "Cidade carregada. Edite os campos e salve." });
@@ -168,6 +177,8 @@ export default function CidadeForm() {
             (Object.keys(fotos) as FotoKey[]).forEach((key) => {
                 if (fotos[key].file) {
                     formData.append(key, fotos[key].file as File);
+                } else if (fotos[key].removida) {
+                    formData.append(`${key}_remover`, "1");
                 }
             });
 
@@ -201,22 +212,23 @@ export default function CidadeForm() {
             const salvo = await res.json();
             const cidadeSalva = salvo.data ?? salvo;
 
-            // atualiza os previews com o que o backend efetivamente salvou
-            // (limpa os "file" locais já que agora são URLs persistidas)
-            setFotos({
-                foto_perfil: { file: null, preview: cidadeSalva.foto_perfil ?? fotos.foto_perfil.preview },
-                foto_1: { file: null, preview: cidadeSalva.foto_1 ?? fotos.foto_1.preview },
-                foto_2: { file: null, preview: cidadeSalva.foto_2 ?? fotos.foto_2.preview },
-            });
+            if (modo === "criar") {
+                // limpa tudo: nova cidade, novo formulário do zero
+                setForm(CAMPOS_INICIAIS);
+                setFotos(FOTOS_INICIAIS);
+            } else {
+                // no editar, mantém os previews atualizados com o que o backend salvou
+                setFotos({
+                    foto_perfil: { file: null, preview: cidadeSalva.foto_perfil ?? null, removida: false },
+                    foto_1: { file: null, preview: cidadeSalva.foto_1 ?? null, removida: false },
+                    foto_2: { file: null, preview: cidadeSalva.foto_2 ?? null, removida: false },
+                });
+            }
 
             setStatus({
                 tipo: "ok",
                 msg: modo === "criar" ? "Cidade criada com sucesso." : "Cidade atualizada com sucesso.",
             });
-
-            if (modo === "criar") {
-                setForm(CAMPOS_INICIAIS);
-            }
         } catch (err: any) {
             setStatus({ tipo: "erro", msg: err.message });
         } finally {
