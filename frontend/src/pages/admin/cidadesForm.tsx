@@ -136,7 +136,6 @@ export default function CidadeForm() {
                     Accept: "application/json",
                     Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
                 },
-                credentials: "include", // necessário para o navegador
             });
             if (!res.ok) throw new Error(`Cidade não encontrada (HTTP ${res.status})`);
             const data = await res.json();
@@ -192,7 +191,6 @@ export default function CidadeForm() {
             const res = await fetch(`${API_BASE}/api/cidades`, {
                 method: "POST",
                 body: formData,
-                credentials: "include", // necessário para o navegador
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
                     Accept: "application/json",

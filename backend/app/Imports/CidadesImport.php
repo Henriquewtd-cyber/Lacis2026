@@ -2,7 +2,7 @@
 
 namespace App\Imports;
 
-use App\Models\Cidade;
+use App\Repositories\ImportsRepository;
 use App\Services\NormalizerService;
 use App\Services\DriveImageService;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -43,6 +43,11 @@ class CidadesImport
 
     private const CHAVE_VALIDO = 'valido_s_ou_n';
 
+    public function __construct(
+        private ImportsRepository $importsRepository,
+    ) {
+    }
+
     public function importar(string $caminhoArquivo): void
     {
         if (!is_readable($caminhoArquivo)) {
@@ -59,7 +64,7 @@ class CidadesImport
 
         // Carrega todas as cidades existentes de uma vez só (1 query),
         // em vez de 1 SELECT por linha da planilha.
-        $this->carregarCidadesExistentes();
+        $this->cidadesCache = $this->importsRepository->carregarCidadesExistentes();
 
         $bom = fread($handle, 3);
         if ($bom !== "\xEF\xBB\xBF") {
@@ -99,17 +104,6 @@ class CidadesImport
         }
 
         fclose($handle);
-    }
-
-    /**
-     * Carrega todas as cidades do banco de uma vez, indexadas por
-     * "ESTADO|nome_simples", para lookup em memória (O(1)) dentro do loop.
-     */
-    private function carregarCidadesExistentes(): void
-    {
-        $this->cidadesCache = Cidade::all()
-            ->keyBy(fn ($c) => $c->estado . '|' . $c->nome_simples)
-            ->all();
     }
 
     private function processarLinha(array $linha, int $numeroLinha): void
@@ -189,10 +183,10 @@ class CidadesImport
             $dados = $this->sanitizarArray($dados);
 
             if ($cidade) {
-                $cidade->update($dados);
+                $cidade = $this->importsRepository->atualizar($cidade, $dados);
                 $this->atualizadas++;
             } else {
-                $cidade = Cidade::create($dados);
+                $cidade = $this->importsRepository->criar($dados);
                 $this->criadas++;
             }
 
