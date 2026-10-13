@@ -195,7 +195,10 @@ class CidadesController extends Controller
 
     // GET /api/cidades/all?estado=PR
     public function getAll(Request $request)
-    {
+    {   
+         
+
+    
         $request->validate([
             'estado' => 'required|string|max:2',
         ]);

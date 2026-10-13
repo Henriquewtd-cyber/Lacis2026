@@ -29,6 +29,21 @@ const Estados: Record<string, string> = {
     'SP': "São Paulo", 'SE': "Sergipe", 'TO': "Tocantins",
 };
 
+const MINUSCULAS = new Set(["a", "o", "e", "de", "da", "do", "das", "dos", "em", "na", "no", "nas", "nos"]);
+
+function formatarNome(texto: string): string {
+    return texto
+        .toLowerCase()
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((palavra, i) =>
+            i > 0 && MINUSCULAS.has(palavra)
+                ? palavra
+                : palavra.charAt(0).toUpperCase() + palavra.slice(1)
+        )
+        .join(" ");
+}
+
 export default function DirigenteCulturaPage() {
     const params = useParams<{ uf: string; cidade: string }>();
 
@@ -57,10 +72,10 @@ export default function DirigenteCulturaPage() {
             setDirigente({
                 estado: Estados[data.estado] ?? data.estado,
                 uf: data.estado,
-                cidade: data.nome_cidade,
-                secretaria: data.nome_orgao,
-                cargo: data.cargo ?? "Titular",
-                nome: data.nome_secretario,
+                cidade: formatarNome(data.nome_cidade),
+                secretaria: formatarNome(data.nome_orgao),
+                cargo: formatarNome(data.cargo ?? "Titular"),
+                nome: formatarNome(data.nome_secretario),
                 url: data.url,
                 foto: data.foto_perfil
                     ? `${API_BASE}/storage/${data.foto_perfil}`
@@ -143,11 +158,11 @@ export default function DirigenteCulturaPage() {
                         {dirigente.estado}
                     </p>
 
-                    <h1 className="mt-1 text-4xl font-extrabold uppercase leading-none md:text-[3.5vw]">
+                    <h1 className="mt-1 text-4xl font-extrabold leading-none md:text-[3.5vw]">
                         {dirigente.cidade}
                     </h1>
 
-                    <h2 className="mt-3 max-w-[30vw] text-base font-bold uppercase leading-snug max-md:max-w-none md:mt-[1vw] md:text-[1.25vw]">
+                    <h2 className="mt-3 max-w-[30vw] text-base font-bold leading-snug max-md:max-w-none md:mt-[1vw] md:text-[1.25vw]">
                         {dirigente.secretaria}
                     </h2>
 
@@ -189,7 +204,7 @@ export default function DirigenteCulturaPage() {
                 {/* ===== Coluna direita ===== */}
                 <section className="flex flex-col md:ml-[5.6vw] md:mt-[4.5vw] md:w-[22vw]">
                     {imagens.length > 0 && (
-                        <div className="flex flex-col gap-3 md:gap-[1.2vw]">
+                        <div className="flex flex-col gap-3 md:gap-[0.8vw]">
                             {imagens.slice(0, 2).map((src, i) => (
                                 <img
                                     key={i}
@@ -202,7 +217,7 @@ export default function DirigenteCulturaPage() {
                     )}
 
                     {/* Nota de rodapé */}
-                    <p className="mt-5 text-xs leading-snug md:mt-[3.5vw] md:ml-[0.3vw] md:text-[0.95vw]">
+                    <p className="mt-5 text-xs leading-snug md:mt-[1.2vw] md:ml-[0.3vw] md:text-[0.95vw]">
                         Informações enviadas pela Prefeitura Municipal. Para alterações,
                         entrar em contato com lacis@usp.br
                     </p>
