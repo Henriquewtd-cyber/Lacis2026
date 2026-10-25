@@ -4,6 +4,7 @@
         "sigla": "AC",
         "secretaria": "Secretaria de Estado de Educação e Cultura",
         "secretario": "Reginaldo Luís Pereira Prates",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/ReginaldoLuísPereiraPratesAC.webp",
         "bandeiraUrl": "/estados/AC-bandeira.png",
         "linkOficial": "https://see.ac.gov.br/"
@@ -13,6 +14,7 @@
         "sigla": "AL",
         "secretaria": "Secretaria de Estado da Cultura e Economia Criativa",
         "secretario": "Mellina Torres Freitas",
+        "genero": "feminino",
         "fotoUrl": "/secretarios-estado/MellinaTorresAL.webp",
         "bandeiraUrl": "/estados/AL-bandeira.png",
         "linkOficial": "https://secult.al.gov.br/"
@@ -22,6 +24,7 @@
         "sigla": "AP",
         "secretaria": "Secretaria de Estado da Cultura (Secult)",
         "secretario": "Clícia Vieira Di Miceli",
+        "genero": "feminino",
         "fotoUrl": "/secretarios-estado/CliciaVieira-AP.webp",
         "bandeiraUrl": "/estados/AP-bandeira.png",
         "linkOficial": "https://secult.portal.ap.gov.br/"
@@ -31,6 +34,7 @@
         "sigla": "AM",
         "secretaria": "Secretaria de Estado de Cultura e Economia Criativa",
         "secretario": "Caio André Pinheiro de Oliveira",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/CaioAndreAM.webp",
         "bandeiraUrl": "/estados/AM-bandeira.png",
         "linkOficial": "https://cultura.am.gov.br/"
@@ -40,6 +44,7 @@
         "sigla": "BA",
         "secretaria": "Secretaria de Cultura do Estado da Bahia",
         "secretario": "Bruno Gomes Monteiro",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/BrunoGMonteiroBA.webp",
         "bandeiraUrl": "/estados/BA-bandeira.png",
         "linkOficial": "https://www.ba.gov.br/cultura/"
@@ -49,6 +54,7 @@
         "sigla": "CE",
         "secretaria": "Secretaria da Cultura (Secult)",
         "secretario": "Luisa Cela",
+        "genero": "feminino",
         "fotoUrl": "/secretarios-estado/LuisaCelaCE.webp",
         "bandeiraUrl": "/estados/CE-bandeira.png",
         "linkOficial": "https://www.secult.ce.gov.br/"
@@ -58,6 +64,7 @@
         "sigla": "DF",
         "secretaria": "Secretaria de Estado de Cultura e Economia Criativa",
         "secretario": "Claudio Abrantes",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/ClaudioAbrantesDF.webp",
         "bandeiraUrl": "/estados/DF-bandeira.png",
         "linkOficial": "https://www.cultura.df.gov.br/"
@@ -67,6 +74,7 @@
         "sigla": "ES",
         "secretaria": "Secretaria da Cultura (Secult)",
         "secretario": "Fabrício Noronha",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/FabricioNoronhaES.webp",
         "bandeiraUrl": "/estados/ES-bandeira.png",
         "linkOficial": "https://secult.es.gov.br/"
@@ -76,6 +84,7 @@
         "sigla": "GO",
         "secretaria": "Secretaria de Estado da Cultura",
         "secretario": "Yara Nunes dos Santos",
+        "genero": "feminino",
         "fotoUrl": "/secretarios-estado/YaraNunesGO.webp",
         "bandeiraUrl": "/estados/GO-bandeira.png",
         "linkOficial": "https://goias.gov.br/cultura/"
@@ -85,6 +94,7 @@
         "sigla": "MA",
         "secretaria": "Secretaria de Estado da Cultura (Secma)",
         "secretario": "Abimael Berredo",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/AbimaelBerredoMA.webp",
         "bandeiraUrl": "/estados/MA-bandeira.png",
         "linkOficial": "https://cultura.ma.gov.br/"
@@ -94,6 +104,7 @@
         "sigla": "MT",
         "secretaria": "Secretaria de Estado de Cultura, Esporte e Lazer",
         "secretario": "Jan Moura",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/JanMouraMT.webp",
         "bandeiraUrl": "/estados/MT-bandeira.png",
         "linkOficial": "https://www.secel.mt.gov.br/"
@@ -103,6 +114,7 @@
         "sigla": "MS",
         "secretaria": "Secretaria de Estado de Turismo, Esporte e Cultura (Setesc)",
         "secretario": "Marcelo Ferreira Miranda",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/MarceloFerreiraMirandaMS.webp",
         "bandeiraUrl": "/estados/MS-bandeira.png",
         "linkOficial": "https://www.setesc.ms.gov.br/"
@@ -112,6 +124,7 @@
         "sigla": "MG",
         "secretaria": "Secretaria de Estado de Cultura e Turismo",
         "secretario": "Bárbara Botega",
+        "genero": "feminino",
         "fotoUrl": "/secretarios-estado/BárbaraBotegaMG.webp",
         "bandeiraUrl": "/estados/MG-bandeira.png",
         "linkOficial": "https://www.mg.gov.br/instituicao_unidade/secretaria-de-estado-de-cultura-e-turismo-secult"
@@ -121,6 +134,7 @@
         "sigla": "PA",
         "secretaria": "Secretaria de Estado de Cultura",
         "secretario": "Úrsula Vidal",
+        "genero": "feminino",
         "fotoUrl": "/secretarios-estado/ÚrsulaVidalPA.webp",
         "bandeiraUrl": "/estados/PA-bandeira.png",
         "linkOficial": "https://secult.pa.gov.br/"
@@ -130,6 +144,7 @@
         "sigla": "PB",
         "secretaria": "Secretaria de Estado da Cultura",
         "secretario": "Pedro Santos",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/PedroSantosPB.webp",
         "bandeiraUrl": "/estados/PB-bandeira.png",
         "linkOficial": "https://paraiba.pb.gov.br/diretas/secretaria-da-cultura/"
@@ -139,6 +154,7 @@
         "sigla": "PR",
         "secretaria": "Secretaria de Estado da Cultura",
         "secretario": "Luciana Casagrande Pereira",
+        "genero": "feminino",
         "fotoUrl": "/secretarios-estado/LucianaCasagrandePereiraPR.webp",
         "bandeiraUrl": "/estados/PR-bandeira.png",
         "linkOficial": "https://www.cultura.pr.gov.br/"
@@ -148,6 +164,7 @@
         "sigla": "PE",
         "secretaria": "Secretaria de Cultura",
         "secretario": "Cacau de Paula",
+        "genero": "feminino",
         "fotoUrl": "/secretarios-estado/CacaudePaulaPE.webp",
         "bandeiraUrl": "/estados/PE-bandeira.png",
         "linkOficial": "https://www.cultura.pe.gov.br/pagina/secretaria-de-cultura/estrutura/secretaria/"
@@ -157,6 +174,7 @@
         "sigla": "PI",
         "secretaria": "Secretaria de Estado da Cultura (Secult)",
         "secretario": "Rodrigo Amorim",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/RodrigoAmorimPI.webp",
         "bandeiraUrl": "/estados/PI-bandeira.png",
         "linkOficial": "http://www.cultura.pi.gov.br/"
@@ -166,6 +184,7 @@
         "sigla": "RJ",
         "secretaria": "Secretaria de Estado de Cultura e Economia Criativa",
         "secretario": "Danielle Barros",
+        "genero": "feminino",
         "fotoUrl": "/secretarios-estado/DanielleBarrosRJ.webp",
         "bandeiraUrl": "/estados/RJ-bandeira.png",
         "linkOficial": "https://cultura.rj.gov.br/"
@@ -175,6 +194,7 @@
         "sigla": "RN",
         "secretaria": "Secretaria de Estado da Cultura",
         "secretario": "Mary Land Brito",
+        "genero": "feminino",
         "fotoUrl": "/secretarios-estado/MaryLandBritoRN.webp",
         "bandeiraUrl": "/estados/RN-bandeira.png",
         "linkOficial": "https://www.cultura.rn.gov.br/"
@@ -184,6 +204,7 @@
         "sigla": "RS",
         "secretaria": "Secretaria de Estado da Cultura (Sedac)",
         "secretario": "Eduardo Debacco Loureiro",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/EduardoDebaccoLoureiroRS.webp",
         "bandeiraUrl": "/estados/RS-bandeira.png",
         "linkOficial": "https://cultura.rs.gov.br/"
@@ -193,6 +214,7 @@
         "sigla": "RO",
         "secretaria": "Fundação Cultural do Estado de Rondônia",
         "secretario": "Paulo Higo",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/PauloHigoRO.webp",
         "bandeiraUrl": "/estados/RO-bandeira.png",
         "linkOficial": "https://rondonia.ro.gov.br/funcer/sobre/a-funcer/"
@@ -202,6 +224,7 @@
         "sigla": "RR",
         "secretaria": "Secretaria de Estado da Cultura e Turismo",
         "secretario": "Alex Ferreira",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/AlexFerreiraRR.webp",
         "bandeiraUrl": "/estados/RR-bandeira.png",
         "linkOficial": "https://secult.rr.gov.br/"
@@ -211,6 +234,7 @@
         "sigla": "SC",
         "secretaria": "Secretaria de Estado de Turismo, Cultura e Esporte (SOL)",
         "secretario": "Tufi Michreff Neto",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/TufiMichreffNetoSC.webp",
         "bandeiraUrl": "/estados/SC-bandeira.png",
         "linkOficial": "https://www.setur.sc.gov.br/"
@@ -220,6 +244,7 @@
         "sigla": "SP",
         "secretaria": "Secretaria da Cultura, Economia e Indústria Criativas",
         "secretario": "Marília Marton",
+        "genero": "feminino",
         "fotoUrl": "/secretarios-estado/MaríliaMartonSP.webp",
         "bandeiraUrl": "/estados/SP-bandeira.png",
         "linkOficial": "https://www.cultura.sp.gov.br/"
@@ -229,6 +254,7 @@
         "sigla": "SE",
         "secretaria": "Fundação de Cultura e Arte Aperipê",
         "secretario": "Valadares Filho",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/ValadaresFilhoSE.webp",
         "bandeiraUrl": "/estados/SE-bandeira.png",
         "linkOficial": "https://www.se.gov.br/funcap"
@@ -238,6 +264,7 @@
         "sigla": "TO",
         "secretaria": "Secretaria de Estado da Cultura (Secult)",
         "secretario": "Adolfo Bezerra de Menezes",
+        "genero": "masculino",
         "fotoUrl": "/secretarios-estado/AdolfoBezerradeMenezesTO.webp",
         "bandeiraUrl": "/estados/TO-bandeira.png",
         "linkOficial": "https://www.to.gov.br/secult"

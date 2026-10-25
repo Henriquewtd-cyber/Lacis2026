@@ -14,6 +14,7 @@ type EstadoInfo = {
     sigla: string;
     secretaria: string;
     secretario: string;
+    genero: string;
     fotoUrl: string;
     bandeiraUrl: string;
     linkOficial: string;
@@ -29,6 +30,7 @@ function gerarEstado(sigla: string) {
         sigla: informacoes.sigla,
         secretaria: informacoes.secretaria,
         secretario: informacoes.secretario,
+        genero: informacoes.genero,
         fotoUrl: informacoes.fotoUrl || "/estados/placeholder-foto.jpg",
         bandeiraUrl: "/bandeiras-br/" + sigla.toUpperCase() + ".webp",
         linkOficial: informacoes.linkOficial || "#",
@@ -40,6 +42,7 @@ const ESTADO_PADRAO: EstadoInfo = {
     sigla: "--",
     secretaria: "SECRETARIA DA CULTURA",
     secretario: "A DEFINIR",
+    genero: "A DEFINIR",
     fotoUrl: "/estados/placeholder-foto.jpg",
     bandeiraUrl: "/estados/placeholder-bandeira.png",
     linkOficial: "#",
@@ -173,8 +176,9 @@ export default function Cidades() {
                     <p style={{ color: "white", fontSize: 20, margin: 0, fontWeight: 600 }}>
                         {estado.secretaria}
                     </p>
+
                     <p style={{ color: "white", fontSize: 17, margin: 0 }}>
-                        SECRETÁRIO(A): {estado.secretario}
+                        {estado.genero === "feminino" ? "SECRETÁRIA" : "SECRETÁRIO"}: {estado.secretario}
                     </p>
                 </div>
 
