@@ -6,7 +6,7 @@ import Estados from "./pages/estados";
 import Cidades from "./pages/cidades";
 import DirigenteCulturaPage from "./pages/info";
 import Sobre from "./pages/sobre";
-import Agenda from "./pages/agenda";
+import Programacao from "./pages/programacao/programacao";
 import AdminHome from "./pages/admin/adminHome";
 import CidadeForm from "./pages/admin/cidadesForm";
 import ImportarCidades from "./pages/admin/importarForm";
@@ -23,7 +23,7 @@ export default function App() {
         element={<DirigenteCulturaPage />}
       />
       <Route path="/sobre" element={<Sobre />} />
-      <Route path="/agenda" element={<Agenda />} />
+      <Route path="/programacao" element={<Programacao />} />
 
       <Route path="/admin/login" element={<Login />} />
 
