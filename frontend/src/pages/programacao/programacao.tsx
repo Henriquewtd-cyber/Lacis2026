@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { CalendarX, MapPin, Play } from "lucide-react";
+import { CalendarDays, CalendarX, Clock, MapPin, Play } from "lucide-react";
 import type { Evento } from "./evento/tipoevento";
 import { buscarEventos } from "./evento/eventos";
 
@@ -36,24 +35,8 @@ function urlDoPlayer(url?: string | null) {
   return null;
 }
 
-// Foco visível: um para fundos escuros e outro para o painel claro
-const focoEscuro =
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#ccff00]";
-const focoClaro =
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black";
-
-// Links da barra do topo. Para incluir uma página nova, adicione uma linha aqui.
-// pronto: false deixa o link desativado (cinza, sem clique). Quando a página
-// existir, troque para true e crie a rota no App.tsx.
-const links = [
-  { rotulo: "Home", para: "/", pronto: true },
-  { rotulo: "Sobre o LACIS", para: "/sobre", pronto: true },
-  { rotulo: "Programação", para: "/programacao", pronto: true },
-  { rotulo: "Cursos de Extensão", para: "/cursos-de-extensao", pronto: false },
-  { rotulo: "Textos", para: "/textos", pronto: false },
-  { rotulo: "Pesquisas", para: "/pesquisas", pronto: false },
-  { rotulo: "Dirigentes de Cultura", para: "/dirigentes-de-cultura", pronto: true },
-];
+const foco =
+  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0c3b2e]";
 
 // ---------- card ----------
 
@@ -70,8 +53,8 @@ function Cartao({
   const data = paraData(evento.data);
 
   return (
-    <article className="flex h-full flex-col overflow-hidden bg-[#0c3b2e] shadow-md">
-      <div className="relative aspect-3/2 shrink-0 overflow-hidden bg-[#163828]">
+    <article className="flex h-full flex-col overflow-hidden rounded-xl border border-[#0c3b2e]/15 bg-white">
+      <div className="relative aspect-3/2 shrink-0 bg-[#e3ece4]">
         {tocando && player ? (
           <iframe
             src={player}
@@ -91,18 +74,15 @@ function Cartao({
                 className="size-full object-cover"
               />
             ) : (
-              <div className="flex size-full items-end gap-2 p-5 text-[#ccff00]">
-                <span className="text-8xl font-black leading-none">{data.getDate()}</span>
-                <span className="pb-1 text-2xl font-black uppercase">
-                  {data.toLocaleDateString("pt-BR", { month: "short" }).replace(".", "")}
-                </span>
+              <div className="flex size-full items-center justify-center text-[#0c3b2e]">
+                <CalendarDays size={40} strokeWidth={1.5} aria-hidden="true" />
               </div>
             )}
             {player && (
               <button
                 type="button"
                 onClick={aoTocar}
-                className={`absolute bottom-3 left-3 inline-flex items-center gap-2 rounded bg-black px-3 py-2 text-xs font-extrabold uppercase tracking-widest text-white transition-colors hover:bg-[#ccff00] hover:text-black ${focoEscuro}`}
+                className={`absolute bottom-3 left-3 inline-flex items-center gap-2 rounded-md bg-white/95 px-3 py-1.5 text-sm font-semibold text-[#0c3b2e] shadow-sm transition-colors hover:bg-white ${foco}`}
               >
                 <Play size={14} aria-hidden="true" />
                 Assistir vídeo
@@ -112,30 +92,35 @@ function Cartao({
         )}
       </div>
 
-      <div className="flex flex-1 flex-col px-6 pb-6 pt-5">
-        <h3 className="text-2xl font-black uppercase leading-tight tracking-tight text-[#ccff00]">
-          {evento.titulo}
-        </h3>
-        <p className="mt-3 font-medium text-[#eef5ee]">
+      <div className="flex flex-1 flex-col p-5">
+        <p className="text-sm font-semibold text-[#0c3b2e]">
           <time dateTime={evento.data}>
-            {data.toLocaleDateString("pt-BR", { day: "numeric", month: "long" })}
+            {data.toLocaleDateString("pt-BR", { weekday: "short", day: "numeric", month: "long" })}
           </time>
-          {" | "}
-          {evento.horario}
-        </p>
-        <p className="mt-2 leading-relaxed text-[#9fb8a8]">{evento.resumo}</p>
-        <p className="mt-4 inline-flex items-start gap-2 text-sm text-[#90ee90]">
-          <MapPin size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
-          {evento.local}
         </p>
 
+        <h3 className="mt-1 text-xl font-bold leading-snug text-[#1b2f25]">{evento.titulo}</h3>
+
+        <p className="mt-2 leading-relaxed text-[#3d5648]">{evento.resumo}</p>
+
+        <ul className="mt-4 space-y-1.5 text-sm text-[#3d5648]">
+          <li className="flex items-start gap-2">
+            <Clock size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
+            {evento.horario}
+          </li>
+          <li className="flex items-start gap-2">
+            <MapPin size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
+            {evento.local}
+          </li>
+        </ul>
+
         {evento.link && (
-          <div className="mt-auto pt-6">
+          <div className="mt-auto pt-5">
             <a
               href={evento.link}
               target="_blank"
               rel="noreferrer"
-              className={`inline-block rounded-tl-2xl bg-[#ccff00] px-5 py-2 text-sm font-extrabold text-black transition-colors hover:bg-white ${focoEscuro}`}
+              className={`inline-block rounded-md bg-[#0c3b2e] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#164d3c] ${foco}`}
             >
               Saiba mais
             </a>
@@ -177,111 +162,56 @@ export default function Programacao() {
     .filter((e) => (passados ? diasAte(e.data) < 0 : diasAte(e.data) >= 0))
     .sort((a, b) => (passados ? b.data.localeCompare(a.data) : a.data.localeCompare(b.data)));
 
-  // Mesmo estilo das etiquetas pretas das páginas Home e Sobre
   const aba = (ativa: boolean) =>
-    `rounded px-4 py-2 text-sm font-extrabold uppercase tracking-widest transition-colors ${focoClaro} ${
-      ativa ? "bg-black text-white" : "text-[#0c3b2e] ring-1 ring-[#0c3b2e] hover:bg-[#0c3b2e] hover:text-white"
+    `px-4 py-2 text-sm font-semibold transition-colors ${foco} ${ativa ? "bg-[#0c3b2e] text-white" : "bg-white text-[#0c3b2e] hover:bg-[#e3ece4]"
     }`;
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#0c3b2e] text-[#eef5ee] [font-family:'Inter',sans-serif]">
-      <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');`}</style>
+    <div className="flex min-h-screen flex-col bg-[#0c3b2e] text-[#1b2f25] [font-family:'Inter',sans-serif]">
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');`}</style>
 
-      <header>
-        {/* Barra clara: dá contraste para a logo escura */}
-        <div className="border-b-4 border-[#ccff00] bg-[#eef5ee]">
-          <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-5 py-3 sm:px-10">
-            <nav aria-label="Principal">
-              <ul className="flex flex-wrap gap-2">
-                {links.map((l) => {
-                  const base =
-                    "inline-block rounded px-3 py-1.5 text-sm font-extrabold uppercase tracking-wide";
-
-                  if (!l.pronto) {
-                    return (
-                      <li key={l.para}>
-                        <span
-                          aria-disabled="true"
-                          className={`${base} cursor-default select-none bg-[#d5dfd8] text-[#5f7468]`}
-                        >
-                          {l.rotulo}
-                          <span className="sr-only"> (em breve)</span>
-                        </span>
-                      </li>
-                    );
-                  }
-
-                  const atual = l.para === "/programacao";
-                  return (
-                    <li key={l.para}>
-                      <Link
-                        to={l.para}
-                        aria-current={atual ? "page" : undefined}
-                        className={`${base} transition-colors ${focoClaro} ${
-                          atual
-                            ? "bg-[#ccff00] text-black ring-2 ring-black"
-                            : "bg-black text-white hover:text-[#ccff00]"
-                        }`}
-                      >
-                        {l.rotulo}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
-
-            <Link to="/" className={`shrink-0 ${focoClaro}`}>
-              <img
-                src="/logo_semfundo.webp"
-                alt="LACIS, página inicial"
-                className="size-16 object-contain sm:size-20"
-              />
-            </Link>
+      <main className="mx-auto mb-10 w-full max-w-6xl flex-1 rounded-2xl bg-[#eef5ee] px-5 py-10 sm:px-10">
+        <header className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-[#0c3b2e] sm:text-4xl">Programação</h1>
+            <p className="mt-2 max-w-xl text-[#3d5648]">
+              Atividades e eventos promovidos pelo LACIS.
+            </p>
           </div>
-        </div>
 
-        <div className="mx-auto w-full max-w-6xl px-5 pb-10 pt-10 sm:px-10">
-          <h1 className="text-5xl font-black uppercase tracking-tight text-[#ccff00] sm:text-7xl">
-            Programação
-          </h1>
-        </div>
-      </header>
-
-      <main className="mx-auto mb-10 w-full max-w-6xl flex-1 rounded-3xl bg-[#eef5ee] px-5 py-12 text-[#1b2f25] sm:px-12">
-        <p className="max-w-3xl text-lg leading-relaxed text-[#3d5648]">
-          Próximas atividades e eventos promovidos pelo LACIS.
-          Confira a programação e participe.
-        </p>
-
-        <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
-          <h2 className="text-4xl font-black uppercase tracking-tight text-[#0c3b2e] sm:text-6xl">
-            {passados ? "Eventos anteriores" : "Próximos eventos"}
-          </h2>
-          <div className="flex gap-2">
+          <div
+            role="group"
+            aria-label="Filtrar eventos"
+            className="flex overflow-hidden rounded-md border border-[#0c3b2e]"
+          >
             <button type="button" aria-pressed={!passados} onClick={() => setPassados(false)} className={aba(!passados)}>
               Próximos
             </button>
-            <button type="button" aria-pressed={passados} onClick={() => setPassados(true)} className={aba(passados)}>
+            <button
+              type="button"
+              aria-pressed={passados}
+              onClick={() => setPassados(true)}
+              className={`${aba(passados)} border-l border-[#0c3b2e]`}
+            >
               Anteriores
             </button>
           </div>
-        </div>
+        </header>
 
         {carregando && (
-          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3" role="status" aria-label="Carregando eventos">
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" role="status" aria-label="Carregando eventos">
             {[0, 1, 2].map((i) => (
-              <div key={i} className="animate-pulse">
-                <div className="aspect-3/2 bg-[#0c3b2e]/20" />
-                <div className="h-40 bg-[#0c3b2e]/10" />
+              <div key={i} className="animate-pulse overflow-hidden rounded-xl bg-white">
+                <div className="aspect-3/2 bg-[#0c3b2e]/10" />
+                <div className="h-40" />
               </div>
             ))}
           </div>
         )}
 
         {erro && (
-          <div role="alert" className="mt-10 rounded-2xl border-2 border-[#0c3b2e] p-8 text-center">
-            <p className="text-lg font-bold">{erro}</p>
+          <div role="alert" className="mt-8 rounded-xl border border-[#0c3b2e]/30 bg-white p-8 text-center">
+            <p className="font-semibold">{erro}</p>
             <button
               type="button"
               onClick={() => {
@@ -289,7 +219,7 @@ export default function Programacao() {
                 setCarregando(true);
                 setTentativa((t) => t + 1);
               }}
-              className={`mt-4 rounded bg-black px-5 py-2 text-sm font-extrabold uppercase tracking-widest text-white hover:bg-[#0c3b2e] ${focoClaro}`}
+              className={`mt-4 rounded-md bg-[#0c3b2e] px-4 py-2 text-sm font-semibold text-white hover:bg-[#164d3c] ${foco}`}
             >
               Tentar de novo
             </button>
@@ -297,17 +227,19 @@ export default function Programacao() {
         )}
 
         {!carregando && !erro && visiveis.length === 0 && (
-          <div className="mt-10 flex flex-col items-center rounded-2xl border-2 border-dashed border-[#0c3b2e]/30 px-6 py-16 text-center">
-            <CalendarX size={36} className="text-[#0c3b2e]/50" aria-hidden="true" />
-            <p className="mt-3 text-lg font-bold">
+          <div className="mt-8 flex flex-col items-center rounded-xl border border-dashed border-[#0c3b2e]/30 px-6 py-14 text-center">
+            <CalendarX size={32} className="text-[#0c3b2e]/60" aria-hidden="true" />
+            <p className="mt-3 font-semibold">
               {passados ? "Nenhum evento anterior encontrado." : "Nenhum evento marcado por enquanto."}
             </p>
-            <p className="mt-1 text-[#3d5648]">Volte em breve para conferir as novidades.</p>
+            <p className="mt-1 text-sm text-[#3d5648]">
+              {passados ? "Os eventos já realizados aparecerão aqui." : "Volte em breve para ver as novidades."}
+            </p>
           </div>
         )}
 
         {!carregando && !erro && visiveis.length > 0 && (
-          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {visiveis.map((e) => (
               <Cartao
                 key={e.id}
