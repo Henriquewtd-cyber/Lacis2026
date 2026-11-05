@@ -191,7 +191,12 @@ export default function DirigenteCulturaPage() {
 
                     {dirigente.url && (
                         <a
-                            href={dirigente.url}
+                            href={
+                                dirigente.url.startsWith("http://") ||
+                                    dirigente.url.startsWith("https://")
+                                    ? dirigente.url
+                                    : `https://${dirigente.url}`
+                            }
                             target="_blank"
                             rel="noopener noreferrer"
                             className="mt-4 block break-all text-sm leading-snug underline md:mt-[1.8vw] md:text-[1.25vw]"
