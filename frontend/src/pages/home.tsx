@@ -348,7 +348,7 @@ export default function Home() {
                     }}
                 >
                     <NavTag label="SOBRE O LACIS" href="sobre" />
-                    <NavTag label="PROGRAMAÇÃO" href="programacao" />
+                    <NavTag label="PROGRAMAÇÃO" href="programacao" ready={false} />
                     <NavTag label="CURSOS DE EXTENSÃO" href="" ready={false} />
                     <NavTag label="TEXTOS" href="" ready={false} />
                     <NavTag label="PESQUISAS" href="" ready={false} />
