@@ -168,8 +168,76 @@ function OQueEModal({ onClose }: { onClose: () => void }) {
                 </h3>
 
                 <p style={{ margin: 0, fontSize: "1rem", lineHeight: 1.6 }}>
-                    Anualmente, o LACIS promove um Encontro com os dirigentes municipais de Cultura, os seus interlocutores mais qualificados, com os quais concretiza os seus objetivos centrais. A cada Encontro são expostos e debatidos temas de políticas culturais relevantes para o bom desempenho das instituições e fortalecimento da cultura das cidades. O Encontro de 2026 será realizado pós-eleições, na segunda semana de novembro, quando o cenário político-administrativo estará definido. Informações serão enviadas às prefeituras e reproduzidas aqui.
+                    Anualmente, o LACIS promove um Encontro com os dirigentes municipais de Cultura, os seus interlocutores mais qualificados, com os quais concretiza os seus objetivos centrais. A cada Encontro são expostos e debatidos temas de políticas culturais relevantes para o bom desempenho das instituições e fortalecimento da cultura das cidades. O Encontro de 2026 será realizado no final de novembro (25/11/2026), quando o cenário político-administrativo estará definido, pós eleições. Informações serão enviadas às prefeituras e reproduzidas aqui.
                 </p>
+            </div>
+        </div>
+    );
+}
+
+// ══════════ Modal "MAIS INFORMAÇÕES" ══════════
+function MaisInfoModal({ onClose }: { onClose: () => void }) {
+    return (
+        <div
+            onClick={onClose}
+            style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(0,0,0,0.6)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 100,
+            }}
+        >
+            <div
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                    position: "relative",
+                    background: "#0c3b2e",
+                    color: "#fff",
+                    width: "90%",
+                    maxWidth: 580,
+                    maxHeight: "85vh",
+                    overflowY: "auto",
+                    padding: "2rem",
+                    borderRadius: 8,
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.5)",
+                }}
+            >
+                <button
+                    onClick={onClose}
+                    aria-label="Fechar"
+                    style={{
+                        position: "absolute",
+                        top: "0.75rem",
+                        right: "0.75rem",
+                        background: "transparent",
+                        border: "none",
+                        color: "#fff",
+                        fontSize: "1.5rem",
+                        lineHeight: 1,
+                        cursor: "pointer",
+                    }}
+                >
+                    ×
+                </button>
+
+                <h3 style={{ margin: "0 0 1rem", fontSize: "1.25rem", fontWeight: 700 }}>
+                    MAIS INFORMAÇÕES
+                </h3>
+
+                <p style={{ margin: 0, fontSize: "1rem", lineHeight: 1.6 }}>
+                    Será realizado no próximo dia 25 de novembro das 9 às 17 horas o Encontro de Dirigentes Municipais de Cultura organizado pelo Laboratório de Cultura, Informação e Sociedade (LACIS) com o apoio da Pró-Reitoria de Cultura e Extensão da USP. São dois os seus objetivos: propor atividades culturais da USP como extensão aos municípios; e debater a função da cultura nas circunscrições das cidades, Estado e País. Não temos o programa pronto, mas é nosso objetivo trazer autoridades das três instâncias citadas para que possam expor suas reflexões. Os contatos já foram feitos e aguardamos as confirmações. Mas, para superar o atraso que tivemos na organização do Encontro, vamos solicitar a sua pré-inscrição para avaliar o grau de interesse pelo evento e, dessa forma, organizá-lo para obter o maior proveito. Para fazer a pré-inscrição, preencha o formulário que está{" "}
+                    <a
+                        href="https://docs.google.com/forms/d/e/1FAIpQLSfqrqGABHND2G1Da7Jk7Kz7ARtC4yjddilI8mhhha5vlI70Tw/viewform?usp=dialog"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "#ccff00" }}
+                    >
+                        aqui
+                    </a>
+                    . Será conferido atestado de participação pela USP.</p>
             </div>
         </div>
     );
@@ -177,6 +245,7 @@ function OQueEModal({ onClose }: { onClose: () => void }) {
 
 export default function Home() {
     const [showModal, setShowModal] = useState(false);
+    const [showInfoModal, setShowInfoModal] = useState(false);
 
     return (
         <main
@@ -311,13 +380,23 @@ export default function Home() {
                             lineHeight: 1.1, margin: 0, textAlign: "center",
                         }}
                     >
-                        ENCONTRO DE DIRIGENTES MUNICIPAIS DE CULTURA NA USP
+                        ENCONTRO DE DIRIGENTES MUNICIPAIS DE CULTURA NA USP / 25/11/2026
                     </h2>
 
-                    <img src="/auditorio-each.webp" alt="Event photo" width={600} height={500} />
+                    <img src="/torredorelogio.webp" alt="Event photo" width={600} height={500} />
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
+
+                    <a
+                        href="#maisinfo"
+                        onClick={(e) => { e.preventDefault(); setShowInfoModal(true); }}
+                        style={{ color: "#fff", fontWeight: 500, fontSize: 24, lineHeight: 1.4, textDecoration: "none", textAlign: "center" }}
+                        onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#a8e6cf")}
+                        onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#fff")}
+                    >
+                        MAIS INFORMAÇÕES
+                    </a>
 
                     <a
                         href="#sobre"
@@ -343,6 +422,10 @@ export default function Home() {
 
             {
                 showModal && <OQueEModal onClose={() => setShowModal(false)} />
+            }
+
+            {
+                showInfoModal && <MaisInfoModal onClose={() => setShowInfoModal(false)} />
             }
         </main >
     );
