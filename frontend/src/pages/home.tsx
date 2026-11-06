@@ -398,7 +398,7 @@ export default function Home() {
                         MAIS INFORMAÇÕES
                     </a>
 
-                    <a
+                    {/*<a
                         href="#sobre"
                         onClick={(e) => { e.preventDefault(); setShowModal(true); }}
                         style={{ color: "#fff", fontWeight: 500, fontSize: 24, lineHeight: 1.4, textDecoration: "none", textAlign: "center" }}
@@ -406,7 +406,8 @@ export default function Home() {
                         onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#fff")}
                     >
                         O QUE É
-                    </a>
+                    </a> */}
+
                     {/* <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 20 }}>/</span>
 
                     <a
