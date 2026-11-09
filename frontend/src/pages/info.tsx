@@ -172,7 +172,7 @@ export default function DirigenteCulturaPage() {
                             <img
                                 src={dirigente.foto}
                                 alt={dirigente.nome}
-                                className="h-full w-full object-cover"
+                                className="h-full w-full object-cover object-top"
                             />
                         ) : (
                             <div className="flex h-full w-full items-center justify-center text-xs">
