@@ -7,6 +7,8 @@ const members = [
     { name: "Luiz Augusto Milanesi", role: "Professor Sênior USP/ECA/CBD", photo: "/responsaveis/LuizMilanesi.webp" },
 ];
 
+// Breakpoint "lg" do Tailwind — abaixo disso usamos o layout mobile
+const DESKTOP_MIN = 1024;
 
 function PdfViewer({ src = "/Regimento.pdf" }) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -16,6 +18,7 @@ function PdfViewer({ src = "/Regimento.pdf" }) {
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
     const renderTaskRef = useRef<any>(null);
+    const lastWidthRef = useRef<number>(0);
 
     useEffect(() => {
         const script = document.createElement("script");
@@ -38,16 +41,42 @@ function PdfViewer({ src = "/Regimento.pdf" }) {
         renderPage(pdf, pageNum);
     }, [pdf, pageNum]);
 
+    // Mobile: refaz o ajuste de largura ao girar o aparelho / mudar a largura.
+    // (Só roda abaixo do breakpoint desktop — o desktop segue como antes.)
+    useEffect(() => {
+        if (!pdf) return;
+        lastWidthRef.current = window.innerWidth;
+        let t: ReturnType<typeof setTimeout>;
+        const onResize = () => {
+            clearTimeout(t);
+            t = setTimeout(() => {
+                const w = window.innerWidth;
+                // a barra de endereço do celular dispara resize só de altura: ignorar
+                if (w === lastWidthRef.current) return;
+                lastWidthRef.current = w;
+                if (w < DESKTOP_MIN && canvasRef.current) renderPage(pdf, pageNum);
+            }, 150);
+        };
+        window.addEventListener("resize", onResize);
+        return () => {
+            clearTimeout(t);
+            window.removeEventListener("resize", onResize);
+        };
+    }, [pdf, pageNum]);
+
     function renderPage(pdfDoc: any, num: number) {
         pdfDoc.getPage(num).then((page: any) => {
             const container = containerRef.current as unknown as HTMLDivElement;
             if (!container) return;
-            const containerWidth = container.clientWidth - 48;
+            const narrow = window.innerWidth < DESKTOP_MIN;
+            // desktop: 48 / 1.15 (como antes) — mobile: encaixa na largura da tela
+            const containerWidth = container.clientWidth - (narrow ? 24 : 48);
             const viewport = page.getViewport({ scale: 1 });
-            const zoom = 1.15;
+            const zoom = narrow ? 1 : 1.15;
             const scale = (containerWidth / viewport.width) * zoom;
             const scaled = page.getViewport({ scale });
             const canvas = canvasRef.current as unknown as HTMLCanvasElement;
+            if (!canvas) return;
             const ctx = canvas.getContext("2d");
             canvas.height = scaled.height;
             canvas.width = scaled.width;
@@ -60,7 +89,7 @@ function PdfViewer({ src = "/Regimento.pdf" }) {
     return (
         <div className="flex h-full flex-col overflow-hidden bg-[#0a1622]">
             {/* Toolbar interna (não é uma topbar da página, pertence só ao visualizador) */}
-            <div className="flex flex-shrink-0 items-center justify-between border-b border-[#1f3a4d] bg-[#0a1622] px-8 py-5">
+            <div className="flex flex-shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#1f3a4d] bg-[#0a1622] px-4 py-3 lg:gap-0 lg:px-8 lg:py-5">
                 <div className="flex items-center gap-3">
                     <span className="text-sm font-extrabold uppercase tracking-wider text-white">
                         Regimento LACIS
@@ -77,7 +106,7 @@ function PdfViewer({ src = "/Regimento.pdf" }) {
                         <button
                             onClick={() => setPageNum((p) => Math.max(1, p - 1))}
                             disabled={pageNum <= 1}
-                            className="flex h-9 w-9 items-center justify-center rounded-md border border-[#2a4a63] bg-[#16293b] text-white transition-opacity disabled:opacity-40"
+                            className="flex h-10 w-10 items-center justify-center rounded-md border border-[#2a4a63] bg-[#16293b] text-white transition-opacity disabled:opacity-40 lg:h-9 lg:w-9"
                         >
                             ←
                         </button>
@@ -87,7 +116,7 @@ function PdfViewer({ src = "/Regimento.pdf" }) {
                         <button
                             onClick={() => setPageNum((p) => Math.min(totalPages, p + 1))}
                             disabled={pageNum >= totalPages}
-                            className="flex h-9 w-9 items-center justify-center rounded-md border border-[#2a4a63] bg-[#16293b] text-white transition-opacity disabled:opacity-40"
+                            className="flex h-10 w-10 items-center justify-center rounded-md border border-[#2a4a63] bg-[#16293b] text-white transition-opacity disabled:opacity-40 lg:h-9 lg:w-9"
                         >
                             →
                         </button>
@@ -98,7 +127,7 @@ function PdfViewer({ src = "/Regimento.pdf" }) {
             {/* Área do PDF — fundo azul claro, própria rolagem */}
             <div
                 ref={containerRef}
-                className="lacis-scroll-blue flex flex-1 min-h-0 items-start justify-center overflow-auto bg-[#dbe9f5] p-8"
+                className="lacis-scroll-blue flex flex-1 min-h-0 items-start justify-center overflow-auto bg-[#dbe9f5] p-3 lg:p-8"
             >
                 {loading ? (
                     <div className="flex h-full w-full items-center justify-center">
@@ -131,15 +160,19 @@ export default function Sobre() {
                 .lacis-scroll-blue::-webkit-scrollbar-thumb:hover { background: #3c637f; }
             `}</style>
 
-            {/* 3 colunas grudadas, sem topbar, ocupando a tela inteira de cima a baixo */}
-            <div className="flex h-screen w-screen overflow-hidden [font-family:'Inter',sans-serif] text-[#eef5ee]">
+            {/*
+              Mobile (< lg): uma coluna só, a página rola normalmente
+                 Histórico → Coordenação → Regimento (PDF)
+              Desktop (≥ lg): 3 colunas grudadas ocupando a tela inteira (inalterado)
+            */}
+            <div className="flex min-h-screen w-full flex-col overflow-x-hidden [font-family:'Inter',sans-serif] text-[#eef5ee] lg:h-screen lg:w-screen lg:flex-row lg:overflow-hidden">
 
                 {/* COLUNA ESQUERDA — Histórico (verde) */}
-                <aside className="lacis-scroll flex h-full w-[32%] min-w-[360px] flex-shrink-0 flex-col overflow-y-auto bg-[#001800] pb-10 pl-10 pt-16">
+                <aside className="lacis-scroll order-1 flex w-full flex-shrink-0 flex-col bg-[#001800] px-6 pb-10 pt-10 lg:order-none lg:h-full lg:w-[32%] lg:min-w-[360px] lg:overflow-y-auto lg:px-0 lg:pb-10 lg:pl-10 lg:pt-16">
                     <div className="mb-6 w-fit rounded bg-black px-4 py-2 text-sm font-extrabold uppercase tracking-widest text-white">
                         Histórico
                     </div>
-                    <p className="m-0 text-[17px] leading-[1.8] text-[#deebe4] pr-10">
+                    <p className="m-0 text-base leading-[1.8] text-[#deebe4] lg:pr-10 lg:text-[17px]">
                         Nos fins de 2010 foi discutida na USP/Escola de Comunicação e Artes a
                         necessidade de reunir pessoas em torno de um campo temático senão inédito, pelo
                         menos pouco explorado, o corte intersecional entre Cultura e Informação. Essas duas
@@ -181,7 +214,7 @@ export default function Sobre() {
 
 
 
-                    <div className="mt-8 flex items-center gap-3 border-t border-[#163828] pr-10 pt-5">
+                    <div className="mt-8 flex items-center gap-3 border-t border-[#163828] pt-5 lg:pr-10">
                         <div className="h-2.5 w-2.5 flex-shrink-0 rounded-full bg-[#e8b84b]" />
                         <div>
                             <div className="text-base font-bold text-white">USP-ECA</div>
@@ -191,28 +224,28 @@ export default function Sobre() {
                 </aside>
 
                 {/* COLUNA CENTRAL — Visualizador de PDF (azul) */}
-                <section className="h-full flex-1 min-w-0">
+                <section className="order-3 h-[80vh] w-full min-w-0 lg:order-none lg:h-full lg:w-auto lg:flex-1">
                     <PdfViewer />
                 </section>
 
                 {/* COLUNA DIREITA — Equipe (verde) */}
-                <aside className="flex h-screen w-[30%] min-w-[340px] flex-shrink-0 flex-col bg-[#0c3b2e] pb-12 pl-10 pt-16">
+                <aside className="order-2 flex w-full flex-shrink-0 flex-col bg-[#0c3b2e] px-6 pb-10 pt-10 lg:order-none lg:h-screen lg:w-[30%] lg:min-w-[340px] lg:px-0 lg:pb-12 lg:pl-10 lg:pt-16">
                     <div className="mb-8 w-fit flex-shrink-0 rounded bg-black px-4 py-2 text-sm font-extrabold uppercase tracking-widest text-white">
                         Coordenação
                     </div>
-                    <div className="flex max-h-[100%] flex-col pr-10">
+                    <div className="flex flex-col lg:max-h-[100%] lg:pr-10">
                         {members.map((m) => (
                             <div
                                 key={m.name}
-                                className="flex items-center gap-2 border-b border-[#163828] py-5 last:border-b-0"
+                                className="flex items-center gap-4 border-b border-[#163828] py-5 last:border-b-0 lg:gap-2"
                             >
                                 <img
                                     src={m.photo}
                                     alt={m.name}
-                                    className="h-24 w-24 flex-shrink-0 border border-[#2a5c41] bg-[#163828] object-cover"
+                                    className="h-20 w-20 flex-shrink-0 border border-[#2a5c41] bg-[#163828] object-cover lg:h-24 lg:w-24"
                                 />
                                 <div>
-                                    <div className="text-xl font-bold text-white">{m.name}</div>
+                                    <div className="text-lg font-bold text-white lg:text-xl">{m.name}</div>
                                     <div className="mt-1.5 text-base font-medium text-[#9fb8a8]">{m.role}</div>
                                 </div>
                             </div>

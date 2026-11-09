@@ -127,8 +127,44 @@ export default function Cidades() {
                 flexDirection: "column",
             }}
         >
+            {/* Cabeçalho no mobile: o desktop continua com os estilos inline originais */}
+            <style>{`
+                @media (max-width: 768px) {
+                    .cab { padding: 16px !important; }
+                    .cab-bandeira,
+                    .cab-foto {
+                        width: 50% !important;
+                        height: 120px !important;
+                        flex: 0 0 50% !important;
+                        box-sizing: border-box;
+                    }
+                    .cab-bandeira { order: 1; }
+                    .cab-foto { order: 2; object-position: center top; }
+                    .cab-info {
+                        order: 3;
+                        flex: 1 1 100% !important;
+                        min-width: 0 !important;
+                        min-height: 0 !important;
+                        padding: 16px 20px !important;
+                        box-sizing: border-box;
+                    }
+                    .cab-titulo { font-size: 22px !important; overflow-wrap: anywhere; }
+                    .cab-sec { font-size: 17px !important; }
+                    .cab-sec2 { font-size: 15px !important; }
+                    .cab-link {
+                        order: 4;
+                        flex: 1 1 100% !important;
+                        margin-left: 0 !important;
+                        box-sizing: border-box;
+                        text-align: center;
+                        overflow-wrap: anywhere;
+                    }
+                }
+            `}</style>
+
             {/* ── Cabeçalho institucional ── */}
             <header
+                className="cab"
                 style={{
                     background: "#4F74C4",
                     padding: "28px 40px",
@@ -139,6 +175,7 @@ export default function Cidades() {
                 }}
             >
                 <img
+                    className="cab-bandeira"
                     src={estado.bandeiraUrl}
                     alt={`Bandeira de ${estado.nomeEstado}`}
                     style={{
@@ -150,6 +187,7 @@ export default function Cidades() {
                 />
 
                 <div
+                    className="cab-info"
                     style={{
                         background: "#15155C",
                         padding: "18px 32px",
@@ -163,6 +201,7 @@ export default function Cidades() {
                     }}
                 >
                     <h1
+                        className="cab-titulo"
                         style={{
                             color: "#FFD23F",
                             fontSize: 30,
@@ -173,16 +212,17 @@ export default function Cidades() {
                     >
                         {estado.nomeEstado.toUpperCase()} ({estado.sigla})
                     </h1>
-                    <p style={{ color: "white", fontSize: 20, margin: 0, fontWeight: 600 }}>
+                    <p className="cab-sec" style={{ color: "white", fontSize: 20, margin: 0, fontWeight: 600 }}>
                         {estado.secretaria}
                     </p>
 
-                    <p style={{ color: "white", fontSize: 17, margin: 0 }}>
+                    <p className="cab-sec2" style={{ color: "white", fontSize: 17, margin: 0 }}>
                         {estado.genero === "feminino" ? "SECRETÁRIA" : "SECRETÁRIO"}: {estado.secretario}
                     </p>
                 </div>
 
                 <img
+                    className="cab-foto"
                     src={estado.fotoUrl}
                     alt={`Foto do(a) secretário(a) de ${estado.nomeEstado}`}
                     style={{
@@ -194,6 +234,7 @@ export default function Cidades() {
                 />
 
                 <a
+                    className="cab-link"
                     href={estado.linkOficial}
                     target="_blank"
                     rel="noreferrer"

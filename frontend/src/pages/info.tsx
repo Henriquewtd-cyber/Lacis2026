@@ -149,8 +149,8 @@ export default function DirigenteCulturaPage() {
      * no mobile os blocos empilham.
      */
     return (
-        <main className={`h-screen w-full ${BG} text-neutral-950 overflow-hidden`}>
-            <div className="flex h-full w-full flex-col px-6 py-6 md:flex-row md:px-[7.3vw] md:pt-[3vw] md:pb-[2.5vw]">
+        <main className={`min-h-screen w-full ${BG} text-neutral-950 md:h-screen md:overflow-hidden`}>
+            <div className="flex w-full flex-col px-6 pb-10 pt-6 md:h-full md:flex-row md:px-[7.3vw] md:pt-[3vw] md:pb-[2.5vw]">
 
                 {/* ===== Coluna esquerda ===== */}
                 <section className="md:w-[30vw] md:shrink-0">
