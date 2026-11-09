@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 
-import Home from "./pages/home";
+import Home from "./pages/home/home-page";
 import Estados from "./pages/estados";
 import Cidades from "./pages/cidades";
 import DirigenteCulturaPage from "./pages/info";

@@ -1,0 +1,194 @@
+"use client";
+
+import { useState } from "react";
+import { MaisInfoModal, NavTag, cellImages, CELL_INTERVALS, FALLBACKS, RotatingCell, OQueEModal } from "./home-components";
+
+
+export default function HomeDesktop() {
+    const [showModal, setShowModal] = useState(false);
+    const [showInfoModal, setShowInfoModal] = useState(false);
+
+    return (
+        <main
+            style={{
+                height: "100vh",
+                width: "100vw",
+                overflow: "hidden",
+                display: "grid",
+                gridTemplateColumns: "1fr 2fr 1fr",
+                fontFamily: "Helvetica Neue, Helvetica, Arial, sans-serif",
+            }}
+        >
+            {/* ══════════ LEFT – verde escuro quase preto ══════════ */}
+            <aside
+                style={{
+                    background: "#001800",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "2.5rem 2rem",
+                    borderRight: "1px solid rgba(255,255,255,0.1)",
+                    overflow: "hidden",
+                }}
+            >
+                {/* Bloco superior: brasão + texto USP/ECA/CBD */}
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" }}>
+                    <img src="/brasao_usp1.webp" alt="Brasão USP" width={60} height={80} />
+                    <p style={{ fontSize: 20, lineHeight: 1.6, color: "#90ee90", textAlign: "center", margin: 0 }}>
+                        <strong style={{ color: "#90ee90", fontWeight: 700 }}>USP</strong> Universidade de São Paulo<br />
+                        <strong style={{ color: "#90ee90", fontWeight: 700 }}>ECA</strong> Escola de Comunicações e Artes<br />
+                        <strong style={{ color: "#90ee90", fontWeight: 700 }}>CBD</strong> Departamento de Informação e Cultura
+                    </p>
+                </div>
+
+                {/* Centro: logomarca centralizada entre os dois blocos */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <img src="/logo_semfundo.webp" alt="LACIS logo" width={300} height={300} />
+                </div>
+
+                {/* Bloco inferior: nome LACIS + email */}
+                <div style={{ textAlign: "center" }}>
+                    <p style={{ fontSize: 22, color: "#90ee90", lineHeight: 1.5, margin: "0 0 0.5rem" }}>
+                        <strong style={{ color: "#90ee90" }}>LACIS</strong> Laboratório de Cultura,<br />
+                        Informação e Sociedade
+                    </p>
+                    <a href="mailto:lacis@usp.br" style={{ display: "block", fontSize: 22, color: "#ccff00", textDecoration: "none" }}>
+                        lacis@usp.br
+                    </a>
+                </div>
+            </aside>
+
+            {/* ══════════ CENTER – 2×2 rotating image grid + floating nav ══════════ */}
+            <section style={{ position: "relative", background: "#000" }}>
+
+                <div
+                    style={{
+                        position: "absolute", inset: 0,
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gridTemplateRows: "1fr 1fr",
+                    }}
+                >
+                    <RotatingCell images={cellImages[0]} interval={CELL_INTERVALS[0]} fallback={FALLBACKS[0]} />
+                    <RotatingCell images={cellImages[1]} interval={CELL_INTERVALS[1]} fallback={FALLBACKS[1]} />
+                    <RotatingCell images={cellImages[2]} interval={CELL_INTERVALS[2]} fallback={FALLBACKS[2]} />
+                    <RotatingCell images={cellImages[3]} interval={CELL_INTERVALS[3]} fallback={FALLBACKS[3]} />
+                </div>
+
+                {/* Aviso "Site em construção" — flutua acima da primeira tag do nav,
+        sem afetar o layout space-evenly do nav em si */}
+                <p
+                    style={{
+                        position: "absolute",
+                        top: "1rem",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                        zIndex: 11,
+                        color: "red",
+                        fontSize: "1.5rem",
+                        textAlign: "center",
+                        margin: 0,
+                        whiteSpace: "nowrap",
+                    }}
+                >
+                    Site em construção!
+                </p>
+
+                {/* Nav overlay */}
+                <nav
+                    style={{
+                        position: "absolute",
+                        inset: 0,
+                        zIndex: 10,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "space-evenly",
+                        padding: "3rem 0",
+                    }}
+                >
+                    <NavTag label="SOBRE O LACIS" href="sobre" />
+                    <NavTag label="PROGRAMAÇÃO" href="programacao" ready={false} />
+                    <NavTag label="CURSOS DE EXTENSÃO" href="" ready={false} />
+                    <NavTag label="TEXTOS" href="" ready={false} />
+                    <NavTag label="PESQUISAS" href="" ready={false} />
+                    <NavTag label="DIRIGENTES DE CULTURA BRASIL" href="dirigentes-de-cultura" />
+                </nav>
+
+            </section>
+
+            {/* ══════════ RIGHT – dark green ══════════ */}
+            <aside
+                style={{
+                    background: "#0c3b2e",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "2.5rem 2rem",
+                    borderLeft: "1px solid rgba(255,255,255,0.1)",
+                    overflow: "hidden",
+                    gap: "4rem",
+                }}
+            >
+
+                <div style={{ width: "91.666%", display: "flex", flexDirection: "column", alignItems: "center", gap: "1.5rem" }}>
+                    <h2
+                        style={{
+                            color: "#fff", fontWeight: 900, fontSize: "1.5rem",
+                            textTransform: "uppercase", letterSpacing: "0.15em",
+                            lineHeight: 1.1, margin: 0, textAlign: "center",
+                        }}
+                    >
+                        ENCONTRO DE DIRIGENTES MUNICIPAIS DE CULTURA NA USP / 25/11/2026
+                    </h2>
+
+                    <img src="/torredorelogio.webp" alt="Event photo" width={600} height={500} />
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "1rem" }}>
+
+                    <a
+                        href="#maisinfo"
+                        onClick={(e) => { e.preventDefault(); setShowInfoModal(true); }}
+                        style={{ color: "#fff", fontWeight: 500, fontSize: 24, lineHeight: 1.4, textDecoration: "none", textAlign: "center" }}
+                        onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#a8e6cf")}
+                        onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#fff")}
+                    >
+                        MAIS INFORMAÇÕES
+                    </a>
+
+                    {/*<a
+                        href="#sobre"
+                        onClick={(e) => { e.preventDefault(); setShowModal(true); }}
+                        style={{ color: "#fff", fontWeight: 500, fontSize: 24, lineHeight: 1.4, textDecoration: "none", textAlign: "center" }}
+                        onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#a8e6cf")}
+                        onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#fff")}
+                    >
+                        O QUE É
+                    </a> */}
+
+                    {/* <span style={{ color: "rgba(255,255,255,0.4)", fontSize: 20 }}>/</span>
+
+                    <a
+                        href="#inscricoes"
+                        style={{ color: "#fff", fontWeight: 500, fontSize: 24, lineHeight: 1.4, textDecoration: "none", textAlign: "center" }}
+                        onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#a8e6cf")}
+                        onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.color = "#fff")}
+                    >
+                        INSCRIÇÕES
+                    </a> */}
+                </div>
+            </aside >
+
+            {
+                showModal && <OQueEModal onClose={() => setShowModal(false)} />
+            }
+
+            {
+                showInfoModal && <MaisInfoModal onClose={() => setShowInfoModal(false)} />
+            }
+        </main >
+    );
+}
