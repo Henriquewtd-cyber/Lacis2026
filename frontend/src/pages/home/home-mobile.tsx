@@ -130,7 +130,7 @@ export default function HomeMobile() {
                         textAlign: "center",
                     }}
                 >
-                    ENCONTRO DE DIRIGENTES MUNICIPAIS DE CULTURA NA USP / 25/11/2026
+                    ENCONTRO DE DIRIGENTES MUNICIPAIS DE CULTURA NA USP / 14/4/2027
                 </h2>
 
                 <img

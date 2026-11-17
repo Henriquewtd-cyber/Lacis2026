@@ -216,7 +216,7 @@ export function OQueEModal({ onClose }: { onClose: () => void }) {
                 </h3>
 
                 <p style={{ margin: 0, fontSize: "1rem", lineHeight: 1.6 }}>
-                    Anualmente, o LACIS promove um Encontro com os dirigentes municipais de Cultura, os seus interlocutores mais qualificados, com os quais concretiza os seus objetivos centrais. A cada Encontro são expostos e debatidos temas de políticas culturais relevantes para o bom desempenho das instituições e fortalecimento da cultura das cidades. O Encontro de 2026 será realizado no final de novembro (25/11/2026), quando o cenário político-administrativo estará definido, pós eleições. Informações serão enviadas às prefeituras e reproduzidas aqui.
+                    Anualmente, o LACIS promove um Encontro com os dirigentes municipais de Cultura, os seus interlocutores mais qualificados, com os quais concretiza os seus objetivos centrais. A cada Encontro são expostos e debatidos temas de políticas culturais relevantes para o bom desempenho das instituições e fortalecimento da cultura das cidades. O Encontro de 2027 será realizado em abril (14/4/2027), quando o cenário político-administrativo estará definido, pós eleições. Informações serão enviadas às prefeituras e reproduzidas aqui.
                 </p>
             </div>
         </div>
@@ -276,7 +276,7 @@ export function MaisInfoModal({ onClose }: { onClose: () => void }) {
                 </h3>
 
                 <p style={{ margin: 0, fontSize: "1rem", lineHeight: 1.6 }}>
-                    Será realizado no próximo dia 25 de novembro das 9 às 17 horas o Encontro de Dirigentes Municipais de Cultura organizado pelo Laboratório de Cultura, Informação e Sociedade (LACIS) com o apoio da Pró-Reitoria de Cultura e Extensão da USP. São dois os seus objetivos: propor atividades culturais da USP como extensão aos municípios; e debater a função da cultura nas circunscrições das cidades, Estado e País. Não temos o programa pronto, mas é nosso objetivo trazer autoridades das três instâncias citadas para que possam expor suas reflexões. Os contatos já foram feitos e aguardamos as confirmações. Mas, para superar o atraso que tivemos na organização do Encontro, vamos solicitar a sua pré-inscrição para avaliar o grau de interesse pelo evento e, dessa forma, organizá-lo para obter o maior proveito. Para fazer a pré-inscrição, preencha o formulário que está{" "}
+                    Será realizado no dia 14 de abril das 9 às 17 horas o Encontro de Dirigentes Municipais de Cultura organizado pelo Laboratório de Cultura, Informação e Sociedade (LACIS) com o apoio da Pró-Reitoria de Cultura e Extensão da USP. São dois os seus objetivos: propor atividades culturais da USP como extensão aos municípios; e debater a função da cultura nas circunscrições das cidades, Estado e País. Não temos o programa pronto, mas é nosso objetivo trazer autoridades das três instâncias citadas para que possam expor suas reflexões. Os contatos já foram feitos e aguardamos as confirmações. Mas, para superar o atraso que tivemos na organização do Encontro, vamos solicitar a sua pré-inscrição para avaliar o grau de interesse pelo evento e, dessa forma, organizá-lo para obter o maior proveito. Para fazer a pré-inscrição, preencha o formulário que está{" "}
                     <a
                         href="https://docs.google.com/forms/d/e/1FAIpQLSfqrqGABHND2G1Da7Jk7Kz7ARtC4yjddilI8mhhha5vlI70Tw/viewform?usp=dialog"
                         target="_blank"
